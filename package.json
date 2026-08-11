@@ -1,0 +1,36 @@
+{
+  "name": "aiorouter-gateway",
+  "version": "1.0.0",
+  "description": "AIOrouter Gateway — setup guides, install scripts and one-prompt installers to connect Claude Desktop / ChatGPT / Codex to 19 AI models with privacy protection.",
+  "license": "MIT",
+  "homepage": "https://aiorouter.ca",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AIOCANA/aiorouter-gateway.git"
+  },
+  "bugs": {
+    "url": "https://github.com/AIOCANA/aiorouter-gateway/issues"
+  },
+  "private": true,
+  "type": "module",
+  "keywords": [
+    "aiorouter",
+    "ai-gateway",
+    "privacy",
+    "pii",
+    "claude-desktop",
+    "codex",
+    "chatgpt",
+    "deepseek",
+    "qwen",
+    "glm",
+    "kimi",
+    "grok",
+    "llm-router",
+    "wire-api-responses",
+    "skills"
+  ],
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "inferenceGatewayBaseUrl": "https://api.aiorouter.ca",
+  "inferenceProvider": "gateway",
+  "inferenceCredentialKind": "static"
+}

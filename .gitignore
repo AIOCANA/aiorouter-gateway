@@ -1,0 +1,37 @@
+# ── Secrets — NEVER commit these ──────────────────────────────
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.pfx
+!*.pem.example
+*.npmrc
+
+# ── Dependencies / build artifacts ────────────────────────────
+node_modules/
+dist/
+*.tsbuildinfo
+*.tgz
+npm-debug.log*
+.npm/
+
+# ── Logs ──────────────────────────────────────────────────────
+*.log
+logs/
+
+# ── OS ────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ── IDE / editors ─────────────────────────────────────────────
+.vscode/
+.idea/
+*.suo
+*.njsproj
+*.sln
+*.sw?
+
+# ── Test / coverage ───────────────────────────────────────────
+coverage/
+.nyc_output/
