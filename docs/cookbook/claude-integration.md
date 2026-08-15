@@ -1,8 +1,7 @@
 # Claude Desktop / Claude Code Integration (Anthropic Messages API)
 
 > **Doc type:** Cookbook — user-facing setup guide
-> **Related:** setup guides: [claude-desktop/SETUP.md](../../claude-desktop/SETUP.md) · [chatgpt-codex/SETUP.md](../../chatgpt-codex/SETUP.md)
-> **Version:** v1.1.0 | **Date:** 2026-08-09
+> **Version:** v1.1.1 | **Date:** 2026-08-10
 > **Author:** AIRO (deepseek-v4-flash)
 
 Use **Claude Desktop** (Third-Party Inference) and **Claude Code** (CLI)
@@ -166,7 +165,6 @@ claude "Hello, are you connected to AIOrouter?"
 
 ## 7. Related
 
-- [Anthropic Gateway plan (開発文檔)](../../claude-desktop/SETUP.md)
 - [Codex CLI Integration (`/v1/responses`)](codex-integration.md)
 - [Codex model switch bridge](codex-model-switch.md)
 - Bridge source: `scripts/aiorouter-claude-bridge.mjs`

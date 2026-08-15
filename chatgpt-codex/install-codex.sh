@@ -66,8 +66,12 @@ AIOROUTER_BLOCK=$(cat <<'AIOBLOCK_EOF'
 name = "AIOrouter"
 base_url = "https://api.aiorouter.ca/v1"
 wire_api = "responses"
-env_key = "AIOROUTER_API_KEY"
-env_key_instructions = "Get your key at https://dashboard.aiorouter.ca/keys"
+# Key comes from ~/.codex/auth.json (set by `codex login --with-api-key` below;
+# shared by the desktop app and CLI). env_key is intentionally commented out —
+# with it active, Codex errors "Missing environment variable: AIOROUTER_API_KEY"
+# whenever the app/terminal process did not inherit the variable.
+# env_key = "AIOROUTER_API_KEY"
+# env_key_instructions = "Get your key at https://dashboard.aiorouter.ca/keys"
 AIOBLOCK_EOF
 )
 
@@ -97,7 +101,7 @@ MODEL_LIST_BLOCK=$(cat <<'MODELBLOCK_EOF'
   # model = "kimi-k3"
   # model = "kimi-k2.7-code"
   # model = "kimi-k2.6"
-  # model = "grok-4.5"
+  # model = "grok-4.6"
   # model = "claude-opus-5"
   # model = "claude-sonnet-5"
   # model = "claude-haiku-4.5"
@@ -119,13 +123,22 @@ elif ! grep -q "model_providers\\.aiorouter" "${CONFIG_PATH}"; then
   echo "${AIOROUTER_BLOCK}" >> "${CONFIG_PATH}"
   echo "✅ Merged aiorouter provider into ~/.codex/config.toml"
 else
-  echo "ℹ️  ~/.codex/config.toml already contains aiorouter — skipped (no changes)"
-fi
+    # P-11 (2026-08-15): neutralize a legacy UNCOMMENTED env_key pair left by
+    # older installers — Codex then demands the env var and errors "Missing
+    # environment variable" even when auth.json has the key. The sed range
+    # scopes the edit to the aiorouter table only, so other providers are
+    # never touched.
+    if grep -qE '^[[:space:]]*env_key([[:space:]]*=|_instructions[[:space:]]*=)' "${CONFIG_PATH}" 2>/dev/null; then
+      sed -i.bak -E '/\[model_providers\.aiorouter\]/,/^\[/ s/^([[:space:]]*)(env_key|env_key_instructions)([[:space:]]*=)/\1# \2\3/' "${CONFIG_PATH}" 2>/dev/null || true
+      echo "ℹ️  Legacy env_key/env_key_instructions in [model_providers.aiorouter] commented out — key now comes only from ~/.codex/auth.json"
+    fi
+    echo "ℹ️  ~/.codex/config.toml already contains aiorouter — skipped (no changes)"
+  fi
 
 # 4. Prompt for API key (hidden) and append to shell rc
 echo
-echo "Enter your AIOrouter API key (ak-...). It will be stored in your shell"
-echo "profile (AIOROUTER_API_KEY) — never written to config.toml."
+echo "Enter your AIOrouter API key (ak-...). It is stored in ~/.codex/auth.json"
+  echo "(shared by app and CLI) plus your shell profile as a fallback — never in config.toml."
 read -r -s -p "API key: " KEY
 echo
 if [ -z "${KEY:-}" ]; then
@@ -146,12 +159,23 @@ else
 fi
 
 if grep -q "AIOROUTER_API_KEY" "${RC}" 2>/dev/null; then
-  echo "ℹ️  AIOROUTER_API_KEY already set in ${RC} — updating value."
-  sed -i.bak "/AIOROUTER_API_KEY=/d" "${RC}" 2>/dev/null || true
-fi
-echo "export AIOROUTER_API_KEY=\"${KEY}\"" >> "${RC}"
-KEY=""  # clear from memory
-echo "✅ AIOROUTER_API_KEY added to ${RC}"
+    echo "ℹ️  AIOROUTER_API_KEY already set in ${RC} — updating value."
+    sed -i.bak "/AIOROUTER_API_KEY=/d" "${RC}" 2>/dev/null || true
+  fi
+  echo "export AIOROUTER_API_KEY=\"${KEY}\"" >> "${RC}"
+  echo "✅ AIOROUTER_API_KEY added to ${RC}"
+
+  # auth.json-first (P-5): store the key where BOTH the desktop app and the CLI
+  # read it (same as the Windows installer). The rc export above stays as a
+  # shell fallback only — the app does NOT read shell profiles.
+  if command -v codex >/dev/null 2>&1; then
+    if printf '%s' "${KEY}" | codex login --with-api-key >/dev/null 2>&1; then
+      echo "✅ Key stored in ~/.codex/auth.json (shared by the app and CLI)."
+    else
+      echo "⚠️  codex login did not report success — retry with: codex login --with-api-key"
+    fi
+  fi
+  KEY=""  # clear from memory
 
 # 5. Next steps + Phase 2 continuation prompt
 echo

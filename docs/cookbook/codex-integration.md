@@ -1,8 +1,7 @@
 # Codex CLI Integration (Responses API / `wire_api = "responses"`)
 
 > **Doc type:** Cookbook — user-facing setup guide
-> **Related:** setup guides: [claude-desktop/SETUP.md](../../claude-desktop/SETUP.md) · [chatgpt-codex/SETUP.md](../../chatgpt-codex/SETUP.md)
-> **Version:** v1.3.0 | **Date:** 2026-08-01
+> **Version:** v1.3.1 | **Date:** 2026-08-10
 > **Author:** AIRO (deepseek-v4-flash)
 
 Use **OpenAI Codex CLI** (and, when official support lands, the Codex App) directly
@@ -100,7 +99,7 @@ Codex CLI ── AIOROUTER_API_KEY ──► POST /v1/responses
   # model = "kimi-k3"
   # model = "kimi-k2.7-code"
   # model = "kimi-k2.6"
-  # model = "grok-4.5"
+  # model = "grok-4.6"
   # model = "claude-opus-5"
   # model = "claude-sonnet-5"
   # model = "claude-haiku-4.5"
@@ -164,7 +163,7 @@ read `aiorouter`, and the model shown should be the AIOrouter model you set.
 
 | Feature | Behavior |
 |:---|:---|
-| Models | All AIOrouter models (`deepseek-v4-pro`, `qwen3.7-max`, `glm-5.2`, `kimi-k3`, `grok-4.5`, `claude-*`, `gemini-*`, …) |
+| Models | All AIOrouter models (`deepseek-v4-pro`, `qwen3.7-max`, `glm-5.2`, `kimi-k3`, `grok-4.6`, `claude-*`, `gemini-*`, …) |
 | Streaming (SSE) | Supported — `response.created` → `output_text.delta` → `response.completed` |
 | Tool calls | `function_call` / `function_call_output` items round-trip correctly |
 | PII Shield | Sensitive values (emails, phones, SINs, secrets…) pseudonymized **before** routing, restored on the way back |
@@ -215,6 +214,6 @@ exposes a provider/base URL setting, point it at:
 
 ## 8. Related
 
-- [Anthropic Gateway (Claude Desktop / Code)](../../claude-desktop/SETUP.md)
+- [Claude Desktop / Claude Code (`/v1/messages`)](claude-integration.md)
+- [Codex model switch bridge](codex-model-switch.md)
 - MCP plugin integration: `/mcp-integration` on the public site
-- Development plan: `chatgpt-codex/SETUP.md`
