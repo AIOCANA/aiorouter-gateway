@@ -202,7 +202,10 @@ AGENTS.md). Please finish verifying and enable my setup:
 - (CLI users only) In a fresh terminal: codex exec -m deepseek-v4-flash "2+2=?"
   → expect "4" and output showing provider: aiorouter.
 - If it fails with "Missing environment variable: AIOROUTER_API_KEY", the key
-  was not picked up — re-run codex login --with-api-key, fully restart, retry.
+    was not picked up — re-run codex login --with-api-key; also comment out any
+    leftover uncommented "env_key = ..." line in ~/.codex/config.toml
+    (auth.json-first; the re-run installer does this automatically), fully
+    restart the app (incl. tray icon), then retry.
 - ⚠️ If the error mentions "api.openai.com" or "Incorrect API key", STOP and
   tell me "base_url is wrong — requests are going to OpenAI instead of
   AIOrouter" — the config.toml base_url must be https://api.aiorouter.ca/v1.

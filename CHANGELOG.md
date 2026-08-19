@@ -4,6 +4,19 @@ All notable changes to the AIOrouter Gateway setup repository are documented in 
 file. Format based on [Keep a Changelog](https://keepachangelog.com/), versioning
 follows [SemVer](https://semver.org/).
 
+## [1.2.0] — 2026-08-18
+
+### Added
+
+- **DeepSeek Harness (`dsh`) setup** (brand-new client):
+  - `deepseek-harness/SETUP.md` — main guide (one-line install / manual 3-step, model
+    switching, plugin features, verification, troubleshooting).
+  - `deepseek-harness/install-dsh.ps1` / `install-dsh.sh` — one-line installer:
+    checks Node.js >= 20, installs `dsh`, adds `@aiorouter/dsh-shield`, prompts for
+    the API key with masked input (never echoed).
+  - `docs/cookbook/deepseek-harness-setup.md` — full plugin + auto-sync reference.
+- README: DeepSeek Harness row in Supported clients + repository map entry.
+
 ## [1.1.0] — 2026-08-10
 
 ### Changed
@@ -36,7 +49,23 @@ follows [SemVer](https://semver.org/).
     (codex-install-prompt, claude-desktop-install-prompt, model-switch-procedure)
   - `verify/` — 30-second privacy verification prompts (fake identity / fake key)
   - `docs/` — privacy policy, advanced MCP integration link, canonical model catalog link
-  - Published install scripts (`install-codex.*`, `install-claude.*`) + SKILL file +
-    catalog + Claude Desktop template (synced from the AIOrouter build pipeline)
-  - Governance: `scripts/export-gateway-repo.mjs` +
-    `scripts/verify-gateway-repo.mjs` (secret-scan gate) + pre-push hook
+- Published install scripts (`install-codex.*`, `install-claude.*`) + SKILL file +
+      catalog + Claude Desktop template (synced from the AIOrouter build pipeline)
+    - Governance: `scripts/export-gateway-repo.mjs` +
+      `scripts/verify-gateway-repo.mjs` (secret-scan gate) + pre-push hook
+
+## 2026-08-15 — installer hardening (P-4b pipeline fix + P-11 legacy env_key)
+
+- `chatgpt-codex/install-codex.ps1` / `.sh`: published copies are now BOM-free
+  (fixes `irm | iex` failing in Windows PowerShell 5.1 with "The term 'Windows'
+  is not recognized" — the UTF-8 BOM used to break the first comment line);
+  local copies keep BOM+CRLF for `powershell -File`.
+- `install-codex.ps1` / `.sh`: the merge path now auto-comments any legacy
+  uncommented `env_key` / `env_key_instructions` lines in
+  `[model_providers.aiorouter]` (auth.json-first; fixes "Missing environment
+  variable: AIOROUTER_API_KEY" after a key change), and the `.sh` installer now
+  also runs `codex login --with-api-key` so the desktop app and CLI share
+  `~/.codex/auth.json`.
+- `chatgpt-codex/SETUP.md` + `docs/cookbook/codex-model-switch.md`: config
+  samples updated (env_key commented), key-rotation and BOM troubleshooting
+  rows added.

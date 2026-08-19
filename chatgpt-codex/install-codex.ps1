@@ -123,7 +123,7 @@ $modelListBlock = @'
     # model = "kimi-k3"
     # model = "kimi-k2.7-code"
     # model = "kimi-k2.6"
-    # model = "grok-4.5"
+    # model = "grok-4.6"
     # model = "claude-opus-5"
     # model = "claude-sonnet-5"
     # model = "claude-haiku-4.5"
@@ -176,19 +176,48 @@ $aiorouterBlock
 }
 else {
     $existing = Get-Content $configPath -Raw
+    $existingChanged = $false
+
+    # P-11 (2026-08-15): a legacy UNCOMMENTED env_key / env_key_instructions
+    # pair (written by older installer versions) makes Codex demand the
+    # AIOROUTER_API_KEY env var and show "Missing environment variable:
+    # AIOROUTER_API_KEY" when the app's process did not inherit it (launched
+    # before the env var was set / Windows Explorer caches env) — even though
+    # the key IS in ~/.codex/auth.json. Neutralize it on every merge so the
+    # auth.json-first design (P-5/P-6) is the single source of truth;
+    # env_key stays available only as a commented CLI fallback.
+    $aiorouterHeader = $existing.IndexOf("[model_providers.aiorouter]")
+    if ($aiorouterHeader -ge 0) {
+        $nextTable = $existing.IndexOf("`n[", $aiorouterHeader + 1)
+        $blockEnd = if ($nextTable -ge 0) { $nextTable } else { $existing.Length }
+        $head = $existing.Substring(0, $aiorouterHeader)
+        $block = $existing.Substring($aiorouterHeader, $blockEnd - $aiorouterHeader)
+        $tail = $existing.Substring($blockEnd)
+        $newBlock = $block -replace '(?m)^([ \t]*)(env_key|env_key_instructions)([ \t]*=)', '$1# $2$3'
+        if ($newBlock -ne $block) {
+            $existing = $head + $newBlock + $tail
+            $existingChanged = $true
+            Write-Host "ℹ️  Legacy env_key/env_key_instructions in [model_providers.aiorouter] commented out —" -ForegroundColor Yellow
+            Write-Host "   the key is read ONLY from ~/.codex/auth.json (set by codex login below)." -ForegroundColor Yellow
+        }
+    }
+
     # TOML rule: a bare key AFTER any [table] belongs to that table. model /
     # model_provider / model_catalog_json must sit BEFORE the first [table]
     # (top level), otherwise Codex ignores them and falls back to OpenAI.
-if ($existing.StartsWith("[")) { $firstTable = 0 } else { $firstTable = $existing.IndexOf("`n[") }
-      $headerEnd = if ($firstTable -ge 0) { $firstTable } else { $existing.Length }
+    if ($existing.StartsWith("[")) { $firstTable = 0 } else { $firstTable = $existing.IndexOf("`n[") }
+    $headerEnd = if ($firstTable -ge 0) { $firstTable } else { $existing.Length }
     $hasTopLevelModelProvider = $existing.Substring(0, $headerEnd) -match "(?m)^model_provider\s*="
     $catalogLine = "model_catalog_json = `"$($configDir.Replace('\','\\'))\\aiorouter-catalog.json`""
     if ($existing -match "model_providers\.aiorouter") {
         if (-not $hasTopLevelModelProvider) {
             $modelTop = $modelListBlock + "`r`n" + $catalogLine + "`r`n"
             $existing = $existing.Insert($headerEnd, $modelTop)
-            Set-Content -Path $configPath -Value $existing -Encoding utf8
+            $existingChanged = $true
             Write-Host "ℹ️  aiorouter present — added top-level model list to ~/.codex/config.toml"
+        }
+        if ($existingChanged) {
+            Set-Content -Path $configPath -Value $existing -Encoding utf8
         } else {
             Write-Host "ℹ️  ~/.codex/config.toml already contains aiorouter — skipped (no changes)"
         }
@@ -197,8 +226,8 @@ if ($existing.StartsWith("[")) { $firstTable = 0 } else { $firstTable = $existin
         Add-Content -Path $configPath -Value $aiorouterBlock -Encoding utf8
         if (-not $hasTopLevelModelProvider) {
             $existing = [IO.File]::ReadAllText($configPath)
-if ($existing.StartsWith("[")) { $firstTable2 = 0 } else { $firstTable2 = $existing.IndexOf("`n[") }
-              $headerEnd2 = if ($firstTable2 -ge 0) { $firstTable2 } else { $existing.Length }
+            if ($existing.StartsWith("[")) { $firstTable2 = 0 } else { $firstTable2 = $existing.IndexOf("`n[") }
+            $headerEnd2 = if ($firstTable2 -ge 0) { $firstTable2 } else { $existing.Length }
             $modelTop = $modelListBlock + "`r`n" + $catalogLine + "`r`n"
             $existing = $existing.Insert($headerEnd2, $modelTop)
             Set-Content -Path $configPath -Value $existing -Encoding utf8

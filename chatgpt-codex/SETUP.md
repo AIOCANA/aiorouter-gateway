@@ -106,22 +106,29 @@ model = "deepseek-v4-flash"      # default
 model_provider = "aiorouter"
 
 [model_providers.aiorouter]
-name = "AIOrouter"
-base_url = "https://api.aiorouter.ca/v1"
-wire_api = "responses"
-env_key = "AIOROUTER_API_KEY"
-env_key_instructions = "Get your key at https://dashboard.aiorouter.ca/keys"
-```
+  name = "AIOrouter"
+  base_url = "https://api.aiorouter.ca/v1"
+  wire_api = "responses"
+  # Key lives in ~/.codex/auth.json (set by `codex login --with-api-key`) —
+  # NOT via env_key, so the desktop app never reports "Missing environment
+  # variable" when it did not inherit the env var (Start-menu launches don't
+  # pick up new User env vars until the next Windows sign-in).
+  # env_key = "AIOROUTER_API_KEY"
+  # env_key_instructions = "Get your key at https://dashboard.aiorouter.ca/keys"
+  ```
 
-Set your key (never paste it into `config.toml`):
+  Set your key (never paste it into `config.toml`; the desktop app and CLI
+  share `~/.codex/auth.json` — use the login method on Windows):
 
-```bash
-# macOS / Linux
-export AIOROUTER_API_KEY=ak-your-key
+  ```bash
+  # macOS / Linux (CLI fallback also exports the env var)
+  codex login --with-api-key
+  export AIOROUTER_API_KEY=ak-your-key
 
-# Windows PowerShell
-$env:AIOROUTER_API_KEY = "ak-your-key"
-```
+  # Windows PowerShell — the installer does exactly this, masked:
+  #   Read-Host "API key" -AsSecureString | codex login --with-api-key
+  $env:AIOROUTER_API_KEY = "ak-your-key"
+  ```
 
 Verify:
 
@@ -151,10 +158,11 @@ Paste these prompts in a chat to prove the PII Shield is active:
 | Symptom | Cause / Fix |
 |:---|:---|
 | App shows your ChatGPT name instead of "AIOrouter" | A background app overwrote `auth.json`. Fully quit (tray icon) → re-run the installer. |
-| `401` / `invalid_api_key` | Key not set or revoked. Re-run `codex login --with-api-key`, or set `AIOROUTER_API_KEY`. |
-| "Missing environment variable: AIOROUTER_API_KEY" | Key not picked up. Re-run `codex login --with-api-key`, fully restart, retry. |
+| `401` / `invalid_api_key` / `Key revoked` | The API key was rotated/revoked on the dashboard. Re-run the installer with the NEW key (it backs up, re-logins, and re-sets the User env var), then fully quit the app (tray icon) and relaunch — or run `codex login --with-api-key` directly. |
+| "Missing environment variable: AIOROUTER_API_KEY" | Your `config.toml` still has an old uncommented `env_key = "AIOROUTER_API_KEY"` line (older installer versions wrote it) and the app process did not inherit the env var (launched before it was set). Re-run the installer — since 2026-08-15 it auto-comments legacy `env_key` lines (auth.json-first) — then fully quit (tray icon) and relaunch. Manual fix: put `# ` in front of the `env_key` / `env_key_instructions` lines, then `codex login --with-api-key`. |
 | Error mentions `api.openai.com` | `base_url` is wrong — requests are going to OpenAI. Fix `base_url = "https://api.aiorouter.ca/v1"`. |
 | App menu switching broke `model` in config | The app's menu overwrote `model` with an OpenAI ID. Quit the app → restore `model = "deepseek-v4-flash"` → relaunch. Don't use the app menu; say "switch to X". |
+| `irm https://aiorouter.ca/setup/install-codex.ps1 | iex` fails with "The term 'Windows' is not recognized" | Older served copies started with a UTF-8 BOM that Windows PowerShell 5.1 mis-decodes, breaking the first comment line (fixed 2026-08-15 — server now serves a BOM-free copy with `charset=utf-8`). If you still see it, download the file, inspect it, and run `powershell -File install-codex.ps1` — identical result. |
 
 ---
 

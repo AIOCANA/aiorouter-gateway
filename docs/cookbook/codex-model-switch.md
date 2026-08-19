@@ -30,14 +30,17 @@ Please set up AIOrouter × Codex for me. Do the following in order:
   # model = "kimi-k2.7-code"
   # model = "kimi-k2.6"
   # model = "kimi-k3"
-  # model = "grok-4.5"
+  # model = "grok-4.6"
   model_provider = "aiorouter"
-  [model_providers.aiorouter]
-  name = "AIOrouter"
-  base_url = "https://api.aiorouter.ca/v1"
-  wire_api = "responses"
-  env_key = "AIOROUTER_API_KEY"
-  env_key_instructions = "Get your key at https://dashboard.aiorouter.ca/keys"
+[model_providers.aiorouter]
+    name = "AIOrouter"
+    base_url = "https://api.aiorouter.ca/v1"
+    wire_api = "responses"
+    # auth.json-first (P-5): env_key is COMMENTED so Codex never demands the
+    # env var (apps launched from the Start menu/Finder don't inherit new
+    # User env vars) — the key is read from ~/.codex/auth.json instead.
+    # env_key = "AIOROUTER_API_KEY"
+    # env_key_instructions = "Get your key at https://dashboard.aiorouter.ca/keys"
 - Important: model / model_provider must stay at the TOML top level (before
   the [model_providers.*] table).
 
