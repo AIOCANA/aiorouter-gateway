@@ -1,4 +1,4 @@
-# AIOrouter Gateway — Connect Claude Desktop & ChatGPT/Codex to 19 AI models
+# AIOrouter Gateway — DeepSeek Harness, Claude Desktop & ChatGPT/Codex to 19 AI models
 
 > One API key. 19 models (DeepSeek, Qwen, GLM, Kimi, Grok, Claude, Gemini…).
 > Your passwords & personal data NEVER reach the LLM (PII Shield: Restore/Redact).
@@ -12,6 +12,7 @@ scripts** — no proprietary source code.
 
 | Client | Method | Guide |
 |--------|--------|-------|
+| DeepSeek Harness (`dsh`) | one-line install + plugin | [deepseek-harness/SETUP.md](deepseek-harness/SETUP.md) |
 | Claude Desktop | Import config → **all 19 models in the picker** | [claude-desktop/SETUP.md](claude-desktop/SETUP.md) |
 | Claude Desktop | Say "switch to X" (advanced, bridge) | [claude-desktop/SETUP.md](claude-desktop/SETUP.md) |
 | ChatGPT / Codex App | one-line install + **say "switch to X"** | [chatgpt-codex/SETUP.md](chatgpt-codex/SETUP.md) |
@@ -34,6 +35,9 @@ scripts** — no proprietary source code.
 
 ```
 README.md                                    ← you are here
+deepseek-harness/                            ← DeepSeek Harness (dsh) setup
+  SETUP.md                                   ← main guide (one-line / manual)
+  install-dsh.ps1 / install-dsh.sh           ← one-line installer (plugin + key)
 claude-desktop/                              ← Claude Desktop setup (all 19 models in picker)
   SETUP.md                                   ← main guide (Import config → picker)
   install-claude.ps1 / install-claude.sh     ← one-click alternative (no Node.js)
@@ -62,7 +66,7 @@ docs/                                        ← privacy policy, MCP integration
 1. **Register + get a key** at [dashboard.aiorouter.ca](https://dashboard.aiorouter.ca)
    — new accounts get a free 7-day trial (`deepseek-v4-flash` only). AIOrouter is a
    **paid service — no free tier** beyond the trial; keys are issued after activation.
-2. **Pick your app** — Claude Desktop or ChatGPT/Codex (see the table above).
+2. **Pick your app** — DeepSeek Harness (`dsh`), Claude Desktop or ChatGPT/Codex (see the table above).
 3. **Paste the one-prompt** from `one-prompt/` — or run the one-line installer from the
    matching `SETUP.md`.
 4. **Verify in 30 seconds** with the prompts in `verify/`.

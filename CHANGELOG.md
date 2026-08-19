@@ -4,6 +4,19 @@ All notable changes to the AIOrouter Gateway setup repository are documented in 
 file. Format based on [Keep a Changelog](https://keepachangelog.com/), versioning
 follows [SemVer](https://semver.org/).
 
+## [1.2.0] — 2026-08-18
+
+### Added
+
+- **DeepSeek Harness (`dsh`) setup** (brand-new client):
+  - `deepseek-harness/SETUP.md` — main guide (one-line install / manual 3-step, model
+    switching, plugin features, verification, troubleshooting).
+  - `deepseek-harness/install-dsh.ps1` / `install-dsh.sh` — one-line installer:
+    checks Node.js >= 20, installs `dsh`, adds `@aiorouter/dsh-shield`, prompts for
+    the API key with masked input (never echoed).
+  - `docs/cookbook/deepseek-harness-setup.md` — full plugin + auto-sync reference.
+- README: DeepSeek Harness row in Supported clients + repository map entry.
+
 ## [1.1.0] — 2026-08-10
 
 ### Changed
