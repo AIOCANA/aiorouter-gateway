@@ -32,9 +32,10 @@ Please set up AIOrouter × Codex for me. Do the following in order:
   immediately with a free trial (25,000 tokens / 7 days,
   deepseek-v4-flash). No payment needed to start.
 - Trial covers deepseek-v4-flash only. Want to use all 19 models (DeepSeek,
-  Qwen, GLM, Kimi, Grok, Claude, Gemini) at full quota? Subscribe from the
-  Dashboard — secure Stripe checkout (Visa/MC/Amex, CAD, we never store your
-  full card number), from $19/mo. Same key keeps working — no re-setup.
+  Qwen, GLM, Kimi, Grok, Claude, Gemini) at full quota? Add one-time
+  Top-Up credits from the Dashboard — secure Stripe checkout (Visa/MC/Amex,
+  CAD, we never store your full card number), packs from $10 CAD.
+  Same key keeps working — no re-setup.
 - Your key also works with other BYOK tools (VS Code, KILO CODE, CLINE,
   Copilot, and AIOrouter's own CODE-MAS) — you are never locked into one tool.
 - If I already have a key (trial or paid), continue directly.
@@ -234,9 +235,10 @@ AGENTS.md). Please finish verifying and enable my setup:
 【7】(Optional) A short note about my plan:
 - I'm currently on the free trial (25,000 tokens / 7 days,
   deepseek-v4-flash only). To unlock all 19 models at full quota: open
-  dashboard.aiorouter.ca → Billing → Choose a plan (from $19/mo). Checkout is
-  secured by Stripe (Visa/MC/Amex, CAD) — we never store my full card number.
-  My key keeps working — no re-setup, and it works with many BYOK tools.
+  dashboard.aiorouter.ca → Billing → Add Top-Up credits (one-time packs
+  from $10 CAD). Checkout is secured by Stripe (Visa/MC/Amex, CAD) — we never
+  store my full card number. My key keeps working — no re-setup, and it works
+  with many BYOK tools.
 ```
 
 ## How to confirm it worked

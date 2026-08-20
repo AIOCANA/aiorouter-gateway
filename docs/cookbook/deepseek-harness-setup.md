@@ -52,8 +52,9 @@ bundles + your overrides) and every plugin you add joins that profile. The
 - **Node.js ≥ 20** and **npm** installed on your machine.
 - **AIOrouter account + API key** (`ak-...`) from
   <https://dashboard.aiorouter.ca/keys> — new accounts get a one-time free trial
-  (25,000 tokens / 7 days, `deepseek-v4-flash` only). Subscriptions (from
-  $19/month) unlock all 19 models; your same key keeps working after upgrade.
+  (25,000 tokens / 7 days, `deepseek-v4-flash` only). One-time Top-Up
+  credits (from $10 CAD, balance never expires) unlock all 19 models; your
+  same API key keeps working.
 
 ---
 

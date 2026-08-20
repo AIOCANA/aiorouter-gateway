@@ -1,4 +1,4 @@
-﻿# AIOrouter one-line secure installer for Codex (Windows PowerShell)
+# AIOrouter one-line secure installer for Codex (Windows PowerShell)
 # Remote URL:  https://aiorouter.ca/setup/install-codex.ps1
 # Usage:       irm https://aiorouter.ca/setup/install-codex.ps1 | iex
 #               (or download → review → run:  powershell -File install-codex.ps1)
@@ -328,7 +328,7 @@ Write-Host 'see my correct name even though the LLM said it saw a placeholder.' 
   Write-Host '【7】(Optional) A note about your plan:' -ForegroundColor White
 Write-Host '- If on the free trial (25,000 tokens / 7 days, deepseek-v4-flash only):' -ForegroundColor White
     Write-Host '  unlock all 19 models at dashboard.aiorouter.ca → Billing → Choose a' -ForegroundColor White
-    Write-Host '  plan (from $19/mo).' -ForegroundColor White
+    Write-Host '  Top-Up pack (from $10 CAD).' -ForegroundColor White
   Write-Host '- Secure Stripe checkout (Visa/MC/Amex, CAD) — we never store your full card number.' -ForegroundColor White
   Write-Host '- Your key keeps working — no re-setup, and it works with many BYOK tools.' -ForegroundColor White
   
