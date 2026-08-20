@@ -26,6 +26,6 @@ always prefer the live catalog URL for human-readable pricing.
 
 ## Pricing
 
-Public retail pricing ($19/mo subscription, per-token rates) is shown only at the
-catalog URL and on [aiorouter.ca](https://aiorouter.ca) — this repository contains no
-pricing tables.
+Public retail pricing (Top-Up packs, pay-as-you-go per-token rates) is shown only at
+the catalog URL and on [aiorouter.ca](https://aiorouter.ca) — this repository contains
+no pricing tables.

@@ -221,7 +221,7 @@ echo ''
 echo '【7】(Optional) A note about your plan:'
 echo '- If on the free trial (25,000 tokens / 7 days, deepseek-v4-flash only):'
 echo '  unlock all 19 models at dashboard.aiorouter.ca → Billing → Choose a'
-echo '  plan (from $19/mo).'
+echo '  Top-Up pack (from $10 CAD).'
 echo '- Secure Stripe checkout (Visa/MC/Amex, CAD) — we never store your full card number.'
 echo '- Your key keeps working — no re-setup, and it works with many BYOK tools.'
 

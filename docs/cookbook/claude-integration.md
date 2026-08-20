@@ -42,9 +42,9 @@ models.
 
 - **AIOrouter account + API key** (`ak-...`) from
     <https://dashboard.aiorouter.ca/keys> — new accounts get a one-time free
-    trial (25,000 tokens / 7 days, `deepseek-v4-flash` only). Subscriptions
-    (from $19/month) unlock all 19 models; your same key keeps working after
-    upgrade.
+    trial (25,000 tokens / 7 days, `deepseek-v4-flash` only). One-time Top-Up
+    credits (from $10 CAD, balance never expires) unlock all 19 models; your
+    same API key keeps working.
 - **Claude Desktop** with Third-Party Inference support (Windows:
   `%LOCALAPPDATA%\Claude-3p\`), or **Claude Code** CLI.
 

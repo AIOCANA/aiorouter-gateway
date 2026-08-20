@@ -3,8 +3,8 @@
 > Importing the config file (Phase 1) only **connects**. After a full restart, open a
 > **NEW conversation** in Claude Desktop and paste the **Phase 2 continuation prompt**
 > below — the AI finishes the verification (the "wow" privacy test), explains the
-> Restore/Redact mechanism, then shows you how to switch models and unlock your
-> subscription. 30 seconds, same flow as Codex.
+> Restore/Redact mechanism, then shows you how to switch models and unlock all
+> 19 models with Top-Up credits. 30 seconds, same flow as Codex.
 >
 > ⚠️ Prerequisite — complete **Phase 1 first**:
 > [claude-desktop/SETUP.md](../claude-desktop/SETUP.md) (Run the one-line installer
@@ -49,13 +49,13 @@ my API key). Please finish verifying and enable my setup:
   you can change Restore/Redact per data type in the Dashboard (API Keys →
   Privacy)."
 
-【4】Trial / subscription note:
+【4】Trial / Top-Up note:
 - If I'm on the free trial: the picker shows all models, but usage is locked
-  to deepseek-v4-flash (trial model lock). Claude models need an active
-  subscription. To unlock everything: dashboard.aiorouter.ca → Billing →
-  Choose a plan (from $19/mo, secure Stripe checkout). My key keeps working —
-  no re-setup.
-- If I'm subscribed: just confirm I can pick any model.
+  to deepseek-v4-flash (trial model lock). Claude models need Top-Up
+  credits. To unlock everything: dashboard.aiorouter.ca → Billing →
+  Add Top-Up (one-time packs from $10 CAD, secure Stripe checkout). My key
+  keeps working — no re-setup.
+- If I already added Top-Up: just confirm I can pick any model.
 
 【5】Model switching teaching:
 - Tell me: to switch models, just pick from the model menu (all AIOrouter

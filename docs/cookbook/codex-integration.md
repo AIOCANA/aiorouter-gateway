@@ -42,8 +42,9 @@ Codex CLI ── AIOROUTER_API_KEY ──► POST /v1/responses
 
 - **AIOrouter account + API key** (`ak-...`) from
     <https://dashboard.aiorouter.ca/keys> — new accounts get a one-time free trial
-    (25,000 tokens / 7 days, `deepseek-v4-flash` only). Subscriptions (from
-    $19/month) unlock all 19 models; your same key keeps working after upgrade.
+    (25,000 tokens / 7 days, `deepseek-v4-flash` only). One-time Top-Up
+    credits (from $10 CAD, balance never expires) unlock all 19 models; your
+    same API key keeps working.
 - **Codex CLI** installed (`codex --version`), v0.146.0 or newer recommended.
 
 > ### ⚠️ Windows desktop app (ChatGPT / Codex) — read before installing

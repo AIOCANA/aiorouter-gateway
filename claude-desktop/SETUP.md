@@ -11,7 +11,7 @@
 
 1. **Register + get an API key** at [dashboard.aiorouter.ca](https://dashboard.aiorouter.ca)
    — new accounts get a free 7-day trial (`deepseek-v4-flash` only). Claude models need
-   an active subscription. AIOrouter is a **paid service — no free tier** beyond the trial.
+   Top-Up credits. AIOrouter is a **paid service — no free tier** beyond the trial.
 2. Install **Claude Desktop** (with Third-Party Inference support). Windows data path
    example: `%LOCALAPPDATA%\Claude-3p\`.
 
@@ -61,9 +61,9 @@ After the automatic restart, the model picker shows **all 19 AIOrouter models**
 any model and chat.
 
 > ⚠️ **Trial note (honest disclosure):** the picker shows all models, but during the
-> free trial **usage is locked to `deepseek-v4-flash`**. Subscribe (from $19/mo,
-> Stripe-secured) to unlock every model — your key keeps working, no re-setup.
-> Claude models specifically require an active subscription.
+> free trial **usage is locked to `deepseek-v4-flash`**. Add one-time Top-Up credits
+> (from $10 CAD, Stripe-secured) to unlock every model — your key keeps working, no
+> re-setup. Claude models specifically require a positive Top-Up balance.
 
 ### Step 5 — Paste the Phase 2 continuation prompt (END of Phase 1)
 
@@ -71,7 +71,7 @@ Claude Desktop has restarted automatically — this is the end of Phase 1 (setup
 **Open a NEW chat and paste the
 [Phase 2 continuation prompt](../one-prompt/claude-desktop-install-prompt.md)** —
 the AI completes the "wow" privacy test, explains Restore/Redact, and walks you
-through subscription + model switching.
+through Top-Up + model switching.
 
 ---
 
