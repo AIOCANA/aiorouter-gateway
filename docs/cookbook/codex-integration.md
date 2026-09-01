@@ -26,9 +26,10 @@ Responses API). AIOrouter therefore exposes a Responses API–compatible endpoin
 
 Because the Codex Gateway endpoint is authenticated with your AIOrouter key, the
 AI Firewall treats the agent's **own** system prompt as trusted (source-based
-trust, not content-based) — so Codex updates never trigger false
-`PROMPT_INJECTION_DETECTED` blocks, while user/tool content and PII protection
-stay fully intact.
+trust, not content-based). Since v0.4 the chat path also runs the firewall in
+**detect-only** mode — it scans and logs injection patterns but never blocks or
+redacts legitimate agent content — so Codex updates never trigger false
+`PROMPT_INJECTION_DETECTED` blocks, while PII protection stays fully intact.
 
 ```
 Codex CLI ── AIOROUTER_API_KEY ──► POST /v1/responses
@@ -91,12 +92,12 @@ Codex CLI ── AIOROUTER_API_KEY ──► POST /v1/responses
   model = "deepseek-v4-flash"      # default — fast & cost-effective
   # model = "deepseek-v4-pro"      # deeper reasoning
   # model = "qwen3.8-max"
+  # model = "qwen3.8-flash"
   # model = "qwen3.7-max"
   # model = "qwen3.7-plus"
-  # model = "qwen3.6-plus"
-  # model = "qwen3.6-flash"
   # model = "glm-5.2"
-  # model = "glm-5.1"
+  # model = "glm-5.3"
+  # model = "glm-5.3-flash"
   # model = "kimi-k3"
   # model = "kimi-k2.7-code"
   # model = "kimi-k2.6"
@@ -168,7 +169,7 @@ read `aiorouter`, and the model shown should be the AIOrouter model you set.
 | Streaming (SSE) | Supported — `response.created` → `output_text.delta` → `response.completed` |
 | Tool calls | `function_call` / `function_call_output` items round-trip correctly |
 | PII Shield | Sensitive values (emails, phones, SINs, secrets…) pseudonymized **before** routing, restored on the way back |
-| AI Firewall | User/tool injection still fully scanned; agent system prompt trusted by source (trustedAgent) |
+| AI Firewall | Chat path is detect-only (v0.4) — injection patterns scanned/logged/FP-captured, never blocking agent work; media/TTS surfaces still block when Shield is active |
 | Billing | Metered normally — visible on the dashboard |
 | Reasoning models | `reasoning_content` mapped to `reasoning` output items |
 

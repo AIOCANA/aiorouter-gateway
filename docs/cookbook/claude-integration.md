@@ -21,13 +21,14 @@ custom gateway that speaks the Anthropic Messages API. AIOrouter exposes
 
 1. Translates the Anthropic request into the canonical chat format;
 2. Runs the **entire** AIOrouter pipeline — PII Shield pseudonymization,
-   AI Firewall, billing, model routing — exactly as `/v1/chat/completions`;
+   AI Firewall (chat detect-only since v0.4: scans/logs injection patterns,
+   never blocks agent work), billing, model routing — exactly as `/v1/chat/completions`;
 3. Translates the response back into Anthropic format (`content` blocks,
    including streaming SSE and `tool_use`).
 
 ```
 Claude Desktop / Claude Code ── x-api-key / Bearer ──► POST /v1/messages
-    └─ 3P profile (static inferenceModels)             └─ PII Shield → AI Firewall → billing → router
+    └─ 3P profile (static inferenceModels)             └─ PII Shield → AI Firewall (chat detect-only) → billing → router
                                                            └─ DeepSeek / Qwen / GLM / Kimi / Grok …
 ```
 
