@@ -1,7 +1,7 @@
 # DeepSeek Harness (dsh) Setup — run 19 AI models with one API key and the AIOrouter Shield plugin
 
 > **Doc type:** Cookbook — user-facing setup guide
-> **Version:** v1.0.0 | **Date:** 2026-08-18
+> **Version:** v1.1.0 | **Date:** 2026-08-31
 > **Author:** AIRO (deepseek-v4-flash)
 
 Use **DeepSeek Harness (dsh)** — a local, model-agnostic AI coding harness — with
@@ -12,9 +12,23 @@ PII restoration markers, account status and model-catalog auto-sync.
 
 ```
 dsh (local harness) ── OpenAI-compatible ──► https://api.aiorouter.ca/v1
-    └─ @aiorouter/dsh-shield plugin     └─ PII Shield → AI Firewall → billing → router
+    └─ @aiorouter/dsh-shield plugin     └─ PII Shield → AI Firewall (chat detect-only) → billing → router
                                          └─ DeepSeek / Qwen / GLM / Kimi / Grok …
 ```
+> 🆕 **New (2026-08-31): one plugin, everything included.** The unified AIOrouter
+> plugin [`@aiorouter/dsh-aiorouter-mas`](https://www.npmjs.com/package/@aiorouter/dsh-aiorouter-mas)
+> now bundles the Shield privacy window **plus** the AIOrouter model route and an
+> optional multi-agent workflow. Quickstart:
+>
+> 1. Create an API key at **https://dashboard.aiorouter.ca** and copy it.
+> 2. In the dsh Web UI open **Settings → Models → AIOrouter** and paste the key.
+> 3. `dsh plugin add @aiorouter/dsh-aiorouter-mas` — done.
+>
+> Installing this plugin does **not** require installing any gateway. Plain
+> AIOrouter routing works out of the box; flip the Multi-agent switch
+> (Settings → aiorouter) for orchestrated multi-model workflows. The rest of
+> this page documents the original Shield-only plugin, which stays available.
+
 
 ---
 
@@ -29,7 +43,10 @@ bundles + your overrides) and every plugin you add joins that profile. The
    (`x-aiorouter-privacy-policy`: `restore-all` / `redact-secrets` / `redact-all`)
    and the GW-1 restoration-marker header (`x-aiorouter-restoration-markers`:
    `plain` / `markdown`). Every request through AIOrouter is protected by the
-   PII Shield and AI Firewall **before** routing to the model provider.
+   PII Shield and AI Firewall **before** routing to the model provider. The
+   chat-path AI Firewall runs in detect-only mode — it scans and logs injection
+   patterns without interrupting your agent's work (no false 400s on legitimate
+   agent content such as conversation compaction summaries).
 2. **A settings section** — *Settings → AIOrouter Shield* in the dsh Web UI
    (policy preset, advanced per-type JSON overrides, marker style). Changes are
    written into the provider headers on every commit.

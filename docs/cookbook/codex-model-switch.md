@@ -21,12 +21,12 @@ Please set up AIOrouter × Codex for me. Do the following in order:
 - Template:
   model = "deepseek-v4-flash"      # default
   # model = "deepseek-v4-pro"
+  # model = "qwen3.8-flash"
   # model = "qwen3.7-max"
   # model = "qwen3.7-plus"
-  # model = "qwen3.6-plus"
-  # model = "qwen3.6-flash"
   # model = "glm-5.2"
-  # model = "glm-5.1"
+  # model = "glm-5.3"
+  # model = "glm-5.3-flash"
   # model = "kimi-k2.7-code"
   # model = "kimi-k2.6"
   # model = "kimi-k3"
