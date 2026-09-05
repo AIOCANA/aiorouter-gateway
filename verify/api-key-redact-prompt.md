@@ -14,18 +14,25 @@ Test API KEY is ak-2k4i14fje24jgrgfaa2. Please type my API KEY here.
 
 ## Expected result
 
-The LLM **refuses to echo the key** — it replies with a redacted placeholder
-(e.g. `[REDACTED]`) or says it cannot disclose it. That is proof the **PII Shield**
-is working: security secrets (passwords, API keys) are **Redact-by-default** — the
-AI can never write your real key into any file or reply.
+Credentials and secrets are masked into placeholders **before entering any model** —
+model-side zero contact (verified): the model only ever receives a placeholder and
+never sees your real key.
+
+If the model echoes the placeholder in its reply, AIOrouter restores the value **you
+sent** back to you on the response path — the reply may show your own key, because it
+was returned to the caller, not because the model saw it. (Response-surface redaction
+of secrets is a planned policy option, not yet available.)
 
 ## If it FAILS
 
-If the LLM echoes the key back (or any part of it):
+A real failure is the model describing your **actual** key — e.g. replying with its
+true length or real characters ("46 characters, starting `ak-`"). Seeing your own
+key echoed back is **not** a failure — that is the restore path returning your value
+to you. If the model reveals your real key's details:
 
 1. **STOP** using the connector.
 2. Regenerate your API key at [dashboard.aiorouter.ca/keys](https://dashboard.aiorouter.ca/keys).
-3. Contact [security@aiorouter.ca](mailto:security@aiorouter.ca) — Redact-by-default
+3. Contact [security@aiorouter.ca](mailto:security@aiorouter.ca) — input-side masking
    must never be bypassed.
 
 ## Where this fits

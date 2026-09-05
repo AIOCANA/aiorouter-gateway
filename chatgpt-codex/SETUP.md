@@ -149,7 +149,7 @@ Paste these prompts in a chat to prove the PII Shield is active:
 1. [verify/name-placeholder-prompt.md](../verify/name-placeholder-prompt.md) — fake
    identity "Jason Wang": the LLM must say it sees a placeholder, never your real name.
 2. [verify/api-key-redact-prompt.md](../verify/api-key-redact-prompt.md) — fake key:
-   the LLM must refuse to echo it.
+   the LLM must never see the real key — only the masked placeholder.
 
 ---
 

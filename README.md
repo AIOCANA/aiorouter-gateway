@@ -29,7 +29,7 @@ scripts** — no proprietary source code.
 - [verify/name-placeholder-prompt.md](verify/name-placeholder-prompt.md) — prove the LLM
   never sees your real name (fake identity: Jason Wang)
 - [verify/api-key-redact-prompt.md](verify/api-key-redact-prompt.md) — prove the LLM never
-  echoes your API key (fake key)
+  sees your real API key (fake key)
 
 ## Repository map
 

@@ -130,7 +130,7 @@ Paste these prompts in a chat to prove the PII Shield is active:
 1. [verify/name-placeholder-prompt.md](../verify/name-placeholder-prompt.md) — fake
    identity "Jason Wang": the LLM must say it sees a placeholder, never your real name.
 2. [verify/api-key-redact-prompt.md](../verify/api-key-redact-prompt.md) — fake key:
-   the LLM must refuse to echo it.
+   the LLM must never see the real key — only the masked placeholder.
 
 If you're on a fresh setup, the
 [one-prompt/claude-desktop-install-prompt.md](../one-prompt/claude-desktop-install-prompt.md)
