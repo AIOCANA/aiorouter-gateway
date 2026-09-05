@@ -215,20 +215,23 @@ AGENTS.md). Please finish verifying and enable my setup:
 【6】Explain how AIOrouter protects me — a short, friendly technical summary:
 - Tell me (in plain language, 3-4 short sentences):
   1. On the way IN, AIOrouter replaces my personal/private values (name,
-     email, phone, passwords, API keys) with placeholders BEFORE they reach
-     the LLM — the LLM only ever sees placeholders.
+     email, phone) with placeholders BEFORE they reach the LLM — the LLM only
+     ever sees placeholders, never my real values.
   2. On the way BACK, AIOrouter restores the placeholders to my real values
-     (Restore) or keeps them redacted (Redact), exactly as I configured in
-     the Dashboard — that's why I see my correct name in the reply even
+     (Restore) or keeps them redacted (Redact) for personal data, per my
+     Dashboard settings — that's why I see my correct name in the reply even
      though the LLM said it saw a placeholder.
-  3. For security secrets (passwords, API keys) the default is Redact — so
-     they come back as [REDACTED ...] and the AI can never write my real
-     password into any file or reply.
+  3. For security secrets (passwords, API keys): they are masked into
+     placeholders BEFORE entering any model — model-side zero contact
+     (verified) — and the value I sent is restored back to me on the response
+     path. The LLM never sees my real secret; if my reply shows my own value,
+     it was returned to me, not disclosed by the model. (Response-surface
+     redaction of secrets is a planned policy option, not yet available.)
   4. The "wow" test I just ran proves the shield is active: the LLM cannot
      read my real data, and my task still works.
-- Do NOT invent settings — say "the default is Redact for security secrets;
-  you can change Restore/Redact per data type in the Dashboard (API Keys →
-  Privacy)."
+- Do NOT invent settings — if I ask, say: secrets are masked into placeholders
+  before entering any model (model-side zero contact), and the value I sent is
+  restored back to me on the response path.
 - End with: "You're fully set up. From now on, just say 'switch to X' and I'll
   change the model for you."
 
