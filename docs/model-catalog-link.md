@@ -1,6 +1,6 @@
 # Model Catalog — single source of truth
 
-The canonical, always-current list of **all 19 AIOrouter models** (DeepSeek, Qwen,
+The canonical, always-current list of **every AIOrouter model on your plan** (DeepSeek, Qwen,
 GLM, Kimi, Grok, Claude, Gemini) with pricing lives at:
 
 ## 🔗 https://aiorouter.ca/docs/model-catalog

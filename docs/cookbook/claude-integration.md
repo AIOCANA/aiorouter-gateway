@@ -1,15 +1,13 @@
 # Claude Desktop / Claude Code Integration (Anthropic Messages API)
 
 > **Doc type:** Cookbook — user-facing setup guide
-> **Version:** v1.1.1 | **Date:** 2026-08-10
-> **Author:** AIRO (deepseek-v4-flash)
+> **Version:** v1.2.0 | **Date:** 2026-09-07
+> **Author:** AIRO
 
-Use **Claude Desktop** (Third-Party Inference) and **Claude Code** (CLI)
-directly with your **AIOrouter API key** (`ak-...`) through the Anthropic
-Messages API–compatible endpoint (`POST /v1/messages`), with the PII Shield,
-AI Firewall and billing running on every request — or run any of the 15+
-AIOrouter models (DeepSeek, Qwen, GLM, Kimi, Grok, …) from inside Claude
-Desktop via the one-command bridge.
+Use **Claude Desktop** (Third-Party Inference) and **Claude Code** (CLI) with
+your **AIOrouter API key** (`ak-...`) through the Anthropic Messages
+API–compatible endpoint (`POST /v1/messages`), with the PII Shield,
+AI Firewall and billing running on every request.
 
 ---
 
@@ -21,20 +19,16 @@ custom gateway that speaks the Anthropic Messages API. AIOrouter exposes
 
 1. Translates the Anthropic request into the canonical chat format;
 2. Runs the **entire** AIOrouter pipeline — PII Shield pseudonymization,
-   AI Firewall, billing, model routing — exactly as `/v1/chat/completions`;
+   AI Firewall (chat detect-only: scans and logs injection patterns, never
+   blocks agent work), billing, model routing — exactly as `/v1/chat/completions`;
 3. Translates the response back into Anthropic format (`content` blocks,
    including streaming SSE and `tool_use`).
 
 ```
 Claude Desktop / Claude Code ── x-api-key / Bearer ──► POST /v1/messages
-    └─ 3P profile (static inferenceModels)             └─ PII Shield → AI Firewall → billing → router
-                                                           └─ DeepSeek / Qwen / GLM / Kimi / Grok …
+    └─ 3P profile                               └─ PII Shield → AI Firewall (chat detect-only) → billing → router
+                                                     └─ DeepSeek / Qwen / GLM / Kimi / Grok …
 ```
-
-By default Claude Desktop only shows **Claude** models it discovers from the
-gateway. The **bridge** (`scripts/aiorouter-claude-bridge.mjs`) writes a
-profile with a static model list so the picker shows **all** AIOrouter
-models.
 
 ---
 
@@ -42,11 +36,11 @@ models.
 
 - **AIOrouter account + API key** (`ak-...`) from
     <https://dashboard.aiorouter.ca/keys> — new accounts get a one-time free
-    trial (25,000 tokens / 7 days, `deepseek-v4-flash` only). One-time Top-Up
-    credits (from $10 CAD, balance never expires) unlock all 19 models; your
-    same API key keeps working.
-- **Claude Desktop** with Third-Party Inference support (Windows:
-  `%LOCALAPPDATA%\Claude-3p\`), or **Claude Code** CLI.
+    trial (see the trial note on the setup page). One-time Top-Up credits
+    unlock every model; your same API key keeps working.
+- **Claude Desktop** with Third-Party Inference support, or **Claude Code**
+    CLI. See the [Claude Desktop setup page](/claude-desktop-setup) for the
+    supported version notes.
 
 ---
 
@@ -63,60 +57,17 @@ models.
 5. Choose the Gateway auth scheme: **`x-api-key`**.
 6. Restart Claude Desktop.
 
-### 3.2 One-command apply (recommended — shows all models)
+> The one-line installer (`/setup/install-claude.ps1` / `.sh`) automates
+> this flow with masked key input and backs up your existing files before any
+> change. You can review the script first.
 
-The Import-template flow scopes the picker to Claude discovery models. To
-show **all AIOrouter models** in the picker, apply the profile with the
-bridge:
+### 3.2 Switch models
 
-```bash
-node scripts/aiorouter-claude-bridge.mjs --apply
-```
-
-The bridge fetches the model list from the gateway (`/v1/models`), writes the
-profile `{uuid}.json` into the Claude Desktop 3P config library
-(`%LOCALAPPDATA%\Claude-3p\configLibrary\`), sets `modelDiscoveryEnabled:
-false`, and backs up the previous profile. Check the result:
-
-```bash
-node scripts/aiorouter-claude-bridge.mjs --status
-node scripts/verify-claude-profile.mjs   # structural check (alias shape, label, tier, default)
-```
-
-> 🔑 **紅線 4 — the bridge never prints or persists your API key.** A fresh
-> `--api-key` is used only for the in-memory model-list fetch; the profile
-> carries forward only an **existing** key verbatim. If no key exists yet,
-> fill it in the Desktop GUI afterwards.
->
-> ℹ️ **Why the picker now shows all models:** the bridge writes
-> `inferenceModels[].name` as Claude-shaped aliases (`claude-opus-4-8-{code}`)
-> because Claude Desktop's client-side picker filter only shows
-> `claude`/`anthropic`-prefixed ids. The gateway serves `/v1/models` in
-> OpenAI shape (real ids), so the bridge derives the alias itself — the same
-> SHA-256 algorithm the server uses to decode it.
-
-### 3.3 Switch models
-
-Pick a model in the Desktop GUI, or use the CLI (supports the "切換到 X"
-spoken command):
-
-```bash
-node scripts/aiorouter-claude-bridge.mjs --switch-model qwen3.7-max
-node scripts/aiorouter-claude-bridge.mjs --switch-model qwen3.7-max --dry-run   # preview only
-```
-
-`--switch-model` moves `isFamilyDefault` to the matching `inferenceModels`
-entry and **preserves all other profile fields** (your API key, auth scheme,
-custom base URL, GUI-managed settings).
-
-### 3.4 Refresh the model list
-
-New models appear in the gateway catalog; refresh the static list in the
-profile without touching anything else:
-
-```bash
-node scripts/aiorouter-claude-bridge.mjs --refresh-models
-```
+Pick a model in the Desktop GUI, or switch by conversation where the client
+supports it. Every AIOrouter model is reachable through the same key — the
+catalogue is served from the gateway, so new models appear without a client
+update. See the [Claude Desktop setup page](/claude-desktop-setup) for the
+current switching instructions.
 
 ---
 
@@ -125,28 +76,28 @@ node scripts/aiorouter-claude-bridge.mjs --refresh-models
 ```bash
 # macOS / Linux
 export ANTHROPIC_BASE_URL="https://api.aiorouter.ca"
-export ANTHROPIC_API_KEY="ak-YOUR_KEY"
+export ANTHROPIC_API_KEY="ak-YOUR-KEY"
 
 # Windows PowerShell
 $env:ANTHROPIC_BASE_URL = "https://api.aiorouter.ca"
-$env:ANTHROPIC_API_KEY = "ak-YOUR_KEY"
+$env:ANTHROPIC_API_KEY = "ak-YOUR-KEY"
 
 claude "Hello, are you connected to AIOrouter?"
 ```
 
 > ⚠️ **Never** hard-code the key in scripts, commit it, or echo it to logs.
+> Use your shell's secret store or a secret manager when possible.
 
 ---
 
 ## 5. Security posture
 
-- **TLS enforced.** The bridge refuses to send an API key over plain `http:`
-  except to loopback hosts (`127.0.0.1`, `localhost`, `::1`) for local
-  testing. Use `https://` for anything reachable over the network.
-- **Redirects are never followed.** The key is never forwarded to a different
-  host via an HTTP redirect (`redirect: "error"`).
-- **The bridge never prints or persists an API key** (紅線 4). `--api-key` is
-  fetch-only, in-memory.
+- **One key, no key on disk.** The API key is supplied at call time or through
+  your shell's secret store — never written into a profile or a log.
+- **HTTPS only.** Use `https://` for anything reachable over the network;
+  plain `http://` is refused except to loopback hosts for local testing.
+- **Redirects are not followed with credentials.** The key is never forwarded
+  to a different host via an HTTP redirect.
 
 ---
 
@@ -155,16 +106,13 @@ claude "Hello, are you connected to AIOrouter?"
 | Symptom | Cause / Fix |
 |:---|:---|
 | `401` / `invalid_api_key` | Wrong key, or key revoked/expired. Regenerate at <https://dashboard.aiorouter.ca/keys>. |
-| Picker only shows Claude models | The 3P profile has no static `inferenceModels`. Run `--apply` (or `--refresh-models` after a gateway update). |
-| `--apply` aborts with "corrupt `_meta.json`" | A previous run left an unparseable `_meta.json`; the bridge refuses to overwrite it. Delete the corrupt file (or restore a `.bak`) and re-run. |
-| `--switch-model` fails fast with a usage error | No slug was given, or the slug was swallowed by a following flag (`--dry-run`). Pass a non-flag slug. |
-| `Refusing to send the API key over plain http…` | `--base-url` was `http://` to a non-loopback host. Use `https://` (or `http://127.0.0.1`/`localhost` for local testing). |
-| Desktop shows the model but the reply is slow | The model is a non-Claude model going through format translation; `tool_use` is fully supported only for Claude models. |
+| Picker only shows a subset of models | The 3P profile lists the models the client discovered. Check the [Claude Desktop setup page](/claude-desktop-setup) for the current model-list guidance. |
+| Desktop shows the model but the reply is slow | A non-Claude model goes through format translation; `tool_use` is fully supported for Claude models. |
 
 ---
 
 ## 7. Related
 
-- [Codex CLI Integration (`/v1/responses`)](codex-integration.md)
-- [Codex model switch bridge](codex-model-switch.md)
-- Bridge source: `scripts/aiorouter-claude-bridge.mjs`
+- [Claude Desktop setup overview](/claude-desktop-setup)
+- [Codex CLI Integration (`/v1/responses`)](/docs/cookbook/codex-integration)
+- [Codex model switch guide](/docs/cookbook/codex-model-switch)

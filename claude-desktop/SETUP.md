@@ -1,7 +1,7 @@
-# Claude Desktop Setup — All 19 Models in Your Picker
+# Claude Desktop Setup — Every Model in Your Picker
 
 > **Applies to:** Claude Desktop (Third-Party Inference) + AIOrouter
-> **Result:** Import one config file → **all 19 AIOrouter models appear in your model
+> **Result:** Import one config file → **every AIOrouter model on your plan appear in your model
 > picker** (DeepSeek, Qwen, GLM, Kimi, Grok, Claude, Gemini…). Switch anytime —
 > even by saying "switch to X" (advanced).
 
@@ -10,7 +10,7 @@
 ## Before you start (Prerequisites)
 
 1. **Register + get an API key** at [dashboard.aiorouter.ca](https://dashboard.aiorouter.ca)
-   — new accounts get a free 7-day trial (`deepseek-v4-flash` only). Claude models need
+   — new accounts get a free 7-day trial (`deepseek-flash` only). Claude models need
    Top-Up credits. AIOrouter is a **paid service — no free tier** beyond the trial.
 2. Install **Claude Desktop** (with Third-Party Inference support). Windows data path
    example: `%LOCALAPPDATA%\Claude-3p\`.
@@ -54,14 +54,14 @@ first). Your API key is **never** written by the script — you paste it in the 
 4. **Test Connection** → must be **green** ✅, then click **Apply Changes** —
    **Claude Desktop restarts automatically.**
 
-### Step 4 — Done: 19 models in your picker
+### Step 4 — Done: every model in your picker
 
-After the automatic restart, the model picker shows **all 19 AIOrouter models**
-(e.g. `deepseek-v4-pro`, `qwen3.7-max`, `glm-5.2`, `kimi-k3`, `grok-4.5`) — pick
+After the automatic restart, the model picker shows **every AIOrouter model on your plan**
+(e.g. `qwen3.8-max`, `qwen3.8-flash`, `glm-5.3`, `kimi-k3`, `grok-4.7`) — pick
 any model and chat.
 
 > ⚠️ **Trial note (honest disclosure):** the picker shows all models, but during the
-> free trial **usage is locked to `deepseek-v4-flash`**. Add one-time Top-Up credits
+> free trial **usage is locked to `deepseek-flash`**. Add one-time Top-Up credits
 > (from $10 CAD, Stripe-secured) to unlock every model — your key keeps working, no
 > re-setup. Claude models specifically require a positive Top-Up balance.
 
@@ -101,8 +101,7 @@ Prefer the GUI? Import the Configuration file manually — same result, no termi
 
 1. **In the model picker (recommended, no tools needed):** every AIOrouter model is
    listed — just pick one and chat.
-2. **In a chat (advanced, requires Node.js):** say **"switch to X"** (e.g. *"switch to
-   deepseek-v4-pro"*) and the AI runs the AIOrouter bridge for you — it backs up before
+2. **In a chat (advanced, requires Node.js):** say **"switch to X"** (e.g. *"switch to qwen3.8-max"*) and the AI runs the AIOrouter bridge for you — it backs up before
    writing and only touches the model selection (`isFamilyDefault`), preserving your
    API key and other profile settings.
    - Bridge CLI (advanced): `--apply`, `--switch-model <slug>`, `--refresh-models`,
@@ -119,7 +118,7 @@ surprised:
 |:---|:---|
 | Cross-session pick may not persist | Across Desktop sessions, the last model pick may not persist (official Desktop behavior). The bridge's `--switch-model` reduces this by setting the family default. |
 | 1M context is binary | Context length is `200k` or `1M` — no middle value. |
-| Background utility calls use the low-cost model | Internal background side-calls use `deepseek-v4-flash` (cost optimization). |
+| Background utility calls use the low-cost model | Internal background side-calls use `deepseek-flash` (cost optimization). |
 
 ---
 
@@ -130,7 +129,7 @@ Paste these prompts in a chat to prove the PII Shield is active:
 1. [verify/name-placeholder-prompt.md](../verify/name-placeholder-prompt.md) — fake
    identity "Jason Wang": the LLM must say it sees a placeholder, never your real name.
 2. [verify/api-key-redact-prompt.md](../verify/api-key-redact-prompt.md) — fake key:
-   the LLM must refuse to echo it.
+   the LLM must never see the real key — only the masked placeholder.
 
 If you're on a fresh setup, the
 [one-prompt/claude-desktop-install-prompt.md](../one-prompt/claude-desktop-install-prompt.md)
@@ -142,5 +141,5 @@ runs the full verification for you.
 
 - [docs/mcp-integration.md](../docs/mcp-integration.md) — advanced MCP tools (10 tools)
   for Claude Code / Codex CLI users (separate optional package)
-- Canonical 19-model list: [docs/model-catalog-link.md](../docs/model-catalog-link.md)
+- Canonical model list: [docs/model-catalog-link.md](../docs/model-catalog-link.md)
 - [docs/privacy-policy.md](../docs/privacy-policy.md) — data handling

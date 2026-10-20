@@ -1,4 +1,6 @@
-# Codex Model Switching with AIOrouter (paste-ready prompt)
+# Codex Model Switching with AIOrouter (legacy one-prompt)
+
+> **Legacy track.** New installs: configure the **AIOrouter Gateway route** (base URL `https://api.aiorouter.ca/v1` + your AIOrouter API key) with the one-line setup script — see the [Codex integration page](/codex-integration). The marketplace plugin and the `aiorouter-codex` CLI are **retired (2026-09-28)**. This page is kept for existing setups that prefer the AI-assisted one-prompt flow — the text below is complete and still works.
 
 > Paste the prompt below into Codex (CLI or desktop app) **once**. The AI will:
 > 1. Set up `~/.codex/config.toml` with the AIOrouter provider + full model list
@@ -19,18 +21,14 @@ Please set up AIOrouter × Codex for me. Do the following in order:
   other provider settings; if model_provider is currently NOT "aiorouter",
   tell me that this will override my current provider and wait for my OK).
 - Template:
-  model = "deepseek-v4-flash"      # default
-  # model = "deepseek-v4-pro"
-  # model = "qwen3.7-max"
+  model = "deepseek-flash"      # default
+  # model = "qwen3.8-flash"
   # model = "qwen3.7-plus"
-  # model = "qwen3.6-plus"
-  # model = "qwen3.6-flash"
   # model = "glm-5.2"
-  # model = "glm-5.1"
-  # model = "kimi-k2.7-code"
-  # model = "kimi-k2.6"
+  # model = "glm-5.3"
+  # model = "glm-5.3-flash"
   # model = "kimi-k3"
-  # model = "grok-4.6"
+  # model = "grok-4.7"
   model_provider = "aiorouter"
 [model_providers.aiorouter]
     name = "AIOrouter"

@@ -1,7 +1,7 @@
 {
   "name": "aiorouter-gateway",
-  "version": "1.0.0",
-  "description": "AIOrouter Gateway — setup guides, install scripts and one-prompt installers to connect Claude Desktop / ChatGPT / Codex to 19 AI models with privacy protection.",
+  "version": "1.3.0",
+  "description": "AIOrouter Gateway — setup guides, install scripts and one-prompt installers to connect Claude Desktop / ChatGPT / Codex to the AI models on your plan with privacy protection.",
   "license": "MIT",
   "homepage": "https://aiorouter.ca",
   "repository": {

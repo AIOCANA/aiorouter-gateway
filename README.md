@@ -1,19 +1,20 @@
-# AIOrouter Gateway — DeepSeek Harness, Claude Desktop & ChatGPT/Codex to 19 AI models
+# AIOrouter Gateway — DeepSeek Harness, Claude Desktop & ChatGPT/Codex on one key
 
-> One API key. 19 models (DeepSeek, Qwen, GLM, Kimi, Grok, Claude, Gemini…).
-> Your passwords & personal data NEVER reach the LLM (PII Shield: Restore/Redact).
+> One API key for the models on your plan (DeepSeek, Qwen, GLM, Kimi, Grok, Claude,
+> Gemini…). Your passwords & personal data never reach the LLM (PII Shield:
+> Restore/Redact).
 
 This repository is the **official setup gateway** for connecting desktop AI apps to
-[AIOrouter](https://aiorouter.ca) — a privacy-first AI gateway with 19 models behind
-one API key. It contains **setup guides, one-prompt installers, and verified install
-scripts** — no proprietary source code.
+[AIOrouter](https://aiorouter.ca) — a privacy-first AI gateway. It contains **setup
+guides, one-prompt installers, and verified install scripts** — no proprietary
+source code.
 
 ## Supported clients
 
 | Client | Method | Guide |
 |--------|--------|-------|
-| DeepSeek Harness (`dsh`) | one-line install + plugin | [deepseek-harness/SETUP.md](deepseek-harness/SETUP.md) |
-| Claude Desktop | Import config → **all 19 models in the picker** | [claude-desktop/SETUP.md](claude-desktop/SETUP.md) |
+| DeepSeek Harness (`dsh`) | one-line install (Gateway route) | [deepseek-harness/SETUP.md](deepseek-harness/SETUP.md) |
+| Claude Desktop | Import config → every model on your plan in the picker | [claude-desktop/SETUP.md](claude-desktop/SETUP.md) |
 | Claude Desktop | Say "switch to X" (advanced, bridge) | [claude-desktop/SETUP.md](claude-desktop/SETUP.md) |
 | ChatGPT / Codex App | one-line install + **say "switch to X"** | [chatgpt-codex/SETUP.md](chatgpt-codex/SETUP.md) |
 | Codex CLI | same + SKILL / AGENTS.md | [chatgpt-codex/SETUP.md](chatgpt-codex/SETUP.md) |
@@ -29,24 +30,24 @@ scripts** — no proprietary source code.
 - [verify/name-placeholder-prompt.md](verify/name-placeholder-prompt.md) — prove the LLM
   never sees your real name (fake identity: Jason Wang)
 - [verify/api-key-redact-prompt.md](verify/api-key-redact-prompt.md) — prove the LLM never
-  echoes your API key (fake key)
+  sees your real API key (fake key)
 
 ## Repository map
 
 ```
 README.md                                    ← you are here
 deepseek-harness/                            ← DeepSeek Harness (dsh) setup
-  SETUP.md                                   ← main guide (one-line / manual)
-  install-dsh.ps1 / install-dsh.sh           ← one-line installer (plugin + key)
-claude-desktop/                              ← Claude Desktop setup (all 19 models in picker)
+  SETUP.md                                   ← main guide (one-line / manual / prompt)
+  install-dsh.ps1 / install-dsh.sh           ← one-line installer (route + key)
+claude-desktop/                              ← Claude Desktop setup (models in picker)
   SETUP.md                                   ← main guide (Import config → picker)
   install-claude.ps1 / install-claude.sh     ← one-click alternative (no Node.js)
   claude-desktop-template.json               ← ready-to-import config template
 chatgpt-codex/                               ← ChatGPT / Codex setup (say "switch to X")
-  SETUP.md                                   ← main guide (one-line / one-prompt)
+  SETUP.md                                   ← main guide (one-line / manual)
   install-codex.ps1 / install-codex.sh       ← one-line installer (embeds the switch SKILL)
   aiorouter-model-switch.skill.md            ← published SKILL file ("switch to X")
-  aiorouter-catalog.min.json                 ← machine-readable 19-model catalog
+  aiorouter-catalog.min.json                 ← machine-readable starter catalog
 one-prompt/                                  ← paste-ready prompts for AI assistants
 verify/                                      ← 30-second privacy verification prompts
 docs/                                        ← privacy policy, MCP integration, model catalog
@@ -64,7 +65,7 @@ docs/                                        ← privacy policy, MCP integration
 ## Getting started in 30 seconds
 
 1. **Register + get a key** at [dashboard.aiorouter.ca](https://dashboard.aiorouter.ca)
-   — new accounts get a free 7-day trial (`deepseek-v4-flash` only). AIOrouter is a
+   — new accounts get a one-time free trial (`deepseek-flash` only). AIOrouter is a
    **paid service — no free tier** beyond the trial; keys are issued after activation.
 2. **Pick your app** — DeepSeek Harness (`dsh`), Claude Desktop or ChatGPT/Codex (see the table above).
 3. **Paste the one-prompt** from `one-prompt/` — or run the one-line installer from the
@@ -78,14 +79,14 @@ docs/                                        ← privacy policy, MCP integration
 > 3. No key? STOP and guide the user to register + pay FIRST.
 > 4. Verify with `aiorouter_test_connection` / a real chat before claiming success.
 > 5. Never fabricate, reuse, or hardcode an API key. Placeholders only (`ak-your-key`).
-> 6. The full 19-model list lives at https://aiorouter.ca/docs/model-catalog — do NOT
->    hardcode a model list into files the user asks you to create; link to the catalog.
+> 6. The full, always-current model list lives at https://aiorouter.ca/docs/model-catalog —
+>    do NOT hardcode a model list into files the user asks you to create; link to the catalog.
 
 ## Documentation
 
 - [privacy-policy.md](docs/privacy-policy.md) — data collection, zero prompt retention, Canada residency
 - [docs/mcp-integration.md](docs/mcp-integration.md) — advanced: 10 MCP tools
-- [docs/model-catalog-link.md](docs/model-catalog-link.md) — canonical 19-model catalog
+- [docs/model-catalog-link.md](docs/model-catalog-link.md) — canonical model catalog
 - [SECURITY.md](SECURITY.md) — how to report vulnerabilities
 - [CONTRIBUTING.md](CONTRIBUTING.md) — how to contribute
 

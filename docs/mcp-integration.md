@@ -1,7 +1,7 @@
 # Advanced: MCP Tools (10 tools for Claude Code / Codex CLI)
 
 > 🎯 **This is an ADVANCED, OPTIONAL path.** For normal use you do **not** need MCP:
-> Claude Desktop already shows all 19 models in its picker, and ChatGPT/Codex use all
+> Claude Desktop already shows every model on your plan in its picker, and ChatGPT/Codex use all
 > models via the one-line install + "say switch to X". MCP only adds **tool** access
 > for agentic workflows (Claude Code, Codex CLI).
 
@@ -89,5 +89,5 @@ AIOrouter also provides a Remote HTTP MCP Server at `https://api.aiorouter.ca/mc
 
 - Setup guides: [claude-desktop/SETUP.md](../claude-desktop/SETUP.md),
   [chatgpt-codex/SETUP.md](../chatgpt-codex/SETUP.md)
-- Canonical 19-model list: [docs/model-catalog-link.md](model-catalog-link.md)
+- Canonical model list: [docs/model-catalog-link.md](model-catalog-link.md)
 - [docs/privacy-policy.md](privacy-policy.md)
