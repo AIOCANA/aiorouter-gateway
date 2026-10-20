@@ -1,107 +1,85 @@
-# ChatGPT / Codex Setup — Say "switch to X" to Change Models
+# ChatGPT / Codex Setup — AIOrouter Gateway
 
-> **Applies to:** ChatGPT desktop app (Codex), Codex CLI + AIOrouter
-> **Result:** one-line install (or one prompt) → your AIOrouter key works in the app
-> and CLI → **say "switch to X"** in the chat and the AI switches your model for you
-> (verified in-app, new chats use the new model immediately — no restart needed).
+> **Applies to:** ChatGPT desktop app (Codex), Codex CLI
+> **Result:** one-line install → the same AIOrouter key works in the desktop app
+> and the CLI. No plugin. No local proxy. The route lives in
+> `~/.codex/config.toml`, the key in `~/.codex/auth.json`.
+
+The installer writes an OpenAI-compatible provider (`wire_api = "responses"`),
+stores the key through `codex login --with-api-key`, and installs the
+“switch to X” skill. Say **“switch to X”** in a chat to change models — the app's
+own model menu is OpenAI-only and must not be used.
+
+Live guide: <https://aiorouter.ca/codex-integration>
 
 ---
 
-## Before you start (Prerequisites)
+## Before you start
 
-1. **Register + get an API key** at [dashboard.aiorouter.ca](https://dashboard.aiorouter.ca)
-   — new accounts get a free 7-day trial (`deepseek-v4-flash` only). AIOrouter is a
-   **paid service — no free tier** beyond the trial; keys are issued after activation.
+1. **Get an API key** at <https://dashboard.aiorouter.ca/keys>. New accounts get
+   a one-time free trial (`deepseek-flash` only); Top-Up credits unlock the rest
+   of the models on your plan.
 2. Install the **ChatGPT desktop app** (Windows/macOS) **or** the **Codex CLI**
-   (`codex --version`, v0.146+ recommended).
-3. ⚠️ **Quit the ChatGPT/Codex app completely** before installing (including the tray
-   icon) — a background app can overwrite `~/.codex/auth.json` right after the
-   installer writes your AIOrouter key. If unsure: **reboot Windows** and don't start
-   the app before running the command.
+   (`codex --version`; v0.146+ recommended).
+3. ⚠️ **Quit the ChatGPT/Codex app completely** — including the tray icon. A
+   background app can overwrite `~/.codex/auth.json` right after the installer
+   writes your key. If unsure, reboot and do not start the app first.
 
 ---
 
-## Option 0 — One-line install (fastest, recommended)
+## One-line install (recommended)
 
-Run this in a terminal (PowerShell on Windows, Terminal on macOS/Linux):
+**Windows (PowerShell):**
 
-- **Windows (PowerShell):**
-  ```powershell
-  irm https://aiorouter.ca/setup/install-codex.ps1 | iex
-  ```
-- **macOS / Linux (Terminal):**
-  ```bash
-  curl -fsSL https://aiorouter.ca/setup/install-codex.sh | bash
-  ```
+```powershell
+irm https://aiorouter.ca/setup/install-codex.ps1 | iex
+```
+
+**macOS / Linux:**
+
+```bash
+curl -fsSL https://aiorouter.ca/setup/install-codex.sh | bash
+```
 
 The installer:
-1. Backs up `~/.codex/config.toml` and `~/.codex/auth.json` (if present).
-2. Creates/merges the `aiorouter` model provider into `~/.codex/config.toml`
-   (`wire_api = "responses"`) — never overwrites other providers.
-3. Prompts for your AIOrouter API key with **masked input** and pipes it to
-   `codex login --with-api-key` (stored in `~/.codex/auth.json` — shared by the app
-   and CLI). **The key is never written into `config.toml` and never echoed.**
-4. Installs the **AIOrouter model-switch SKILL** → after relaunch you can just
-   **say "switch to X"**.
-5. Prints the Phase 2 continuation prompt — paste it into a NEW chat after relaunch.
 
-Scripts are also in this repo for review:
-[install-codex.ps1](install-codex.ps1) / [install-codex.sh](install-codex.sh).
+1. backs up `~/.codex/config.toml` and `~/.codex/auth.json` (if present);
+2. creates/merges the `aiorouter` provider — never overwrites other providers;
+3. seeds `~/.codex/aiorouter-catalog.json` and wires it through
+   `model_catalog_json` (Codex refuses to load a config whose catalog file is
+   missing); the first “switch to X” refreshes it from `GET /v1/models`;
+4. asks for the key with masked input and pipes it to
+   `codex login --with-api-key` — the key is never written into `config.toml`;
+5. prints a short verification prompt for a new chat.
 
----
-
-## Option 1 — One prompt (AI does the setup)
-
-Paste the full prompt from
-[one-prompt/codex-install-prompt.md](../one-prompt/codex-install-prompt.md) into the
-ChatGPT/Codex chat. The AI will: set up your key (never pasted into the chat), write
-`~/.codex/config.toml`, **install the SKILL** (downloaded from
-`https://aiorouter.ca/setup/aiorouter-model-switch.skill.md`), write the AGENTS.md
-fallback procedure, then guide you through restart + verification.
+Review the scripts before running them:
+[install-codex.ps1](install-codex.ps1) · [install-codex.sh](install-codex.sh)
 
 ---
 
-## Switching models — say "switch to X"
+## Manual setup (2 minutes)
 
-After install (either option), open a new chat and say:
-
-> **"switch to qwen3.7-max"** (or any model slug)
-
-The AI (via the SKILL) edits exactly one `model =` line in `~/.codex/config.toml`
-(after backing it up), verifies the change, and confirms. **New chats use the new
-model immediately — no restart needed** (verified in-app, 2026-08-09).
-
-Supported triggers: "switch to / change to / use <model>".
-
-**Fallbacks if you don't want the SKILL:**
-- CLI per-run: `codex exec -m <model> "your prompt"`
-- Manual: uncomment exactly ONE `model = "..."` line in `~/.codex/config.toml`
-  (quit the app first so it doesn't overwrite the file while running).
-
-> ⚠️ The app's model menu is OpenAI-limited (hardcoded) — do NOT use it to switch;
-> say "switch to X" in the chat instead (or edit `config.toml` manually with the app
-> fully closed).
-
----
-
-## Manual setup (if you prefer to do it yourself)
-
-Create `~/.codex/config.toml`:
+Edit `~/.codex/config.toml`. The top-level `model` / `model_provider` lines must
+sit **before the first `[table]`**:
 
 ```toml
-# ── How to switch models ────────────────────────────────────
-#   1. Say "switch to X" in the app/CLI (SKILL + bridge).
-#      New chats use the new model immediately — no restart.
-#   2. Or uncomment exactly ONE "model =" line below.
-#   3. Per run (CLI):  codex exec -m <model> "your prompt"
+# ── Model switching ─────────────────────────────────────────
+#   Say "switch to X" in the app/CLI (skill + bridge).
+#   Or uncomment exactly ONE "model =" line below.
 # ────────────────────────────────────────────────────────────
-# MODEL — uncomment exactly ONE line (default = deepseek-v4-flash).
-# Full 19-model list: https://aiorouter.ca/docs/model-catalog
-model = "deepseek-v4-flash"      # default
-# model = "deepseek-v4-pro"
-# model = "qwen3.7-max"
+model = "deepseek-flash"          # default
+# model = "qwen3.8-max"
+# model = "qwen3.8-flash"
+# model = "qwen3.7-plus"
 # model = "glm-5.2"
-# model = "grok-4.5"
+# model = "glm-5.3"
+# model = "kimi-k3"
+# model = "grok-4.7"
+# model = "claude-opus-5-5"
+# model = "claude-sonnet-5"
+# model = "claude-haiku-5-5"
+# model = "claude-fable-5-1"
+# model = "gemini-3.8-flash"
 
 model_provider = "aiorouter"
 
@@ -109,47 +87,49 @@ model_provider = "aiorouter"
   name = "AIOrouter"
   base_url = "https://api.aiorouter.ca/v1"
   wire_api = "responses"
-  # Key lives in ~/.codex/auth.json (set by `codex login --with-api-key`) —
-  # NOT via env_key, so the desktop app never reports "Missing environment
-  # variable" when it did not inherit the env var (Start-menu launches don't
-  # pick up new User env vars until the next Windows sign-in).
-  # env_key = "AIOROUTER_API_KEY"
-  # env_key_instructions = "Get your key at https://dashboard.aiorouter.ca/keys"
-  ```
+  # Key lives in ~/.codex/auth.json (set by `codex login --with-api-key`),
+  # not in this file. Legacy env_key lines must stay commented out.
+```
 
-  Set your key (never paste it into `config.toml`; the desktop app and CLI
-  share `~/.codex/auth.json` — use the login method on Windows):
+Store the key (never paste it into `config.toml`):
 
-  ```bash
-  # macOS / Linux (CLI fallback also exports the env var)
-  codex login --with-api-key
-  export AIOROUTER_API_KEY=ak-your-key
+```bash
+codex login --with-api-key     # reads the key from stdin → ~/.codex/auth.json
+```
 
-  # Windows PowerShell — the installer does exactly this, masked:
-  #   Read-Host "API key" -AsSecureString | codex login --with-api-key
-  $env:AIOROUTER_API_KEY = "ak-your-key"
-  ```
+Windows PowerShell equivalent (the installer does this, masked):
+
+```powershell
+Read-Host "API key" -AsSecureString | codex login --with-api-key
+```
+
+Then make the key available to the CLI process (optional for the desktop app):
+
+```bash
+export AIOROUTER_API_KEY="ak-your-key"
+```
+
+```powershell
+$env:AIOROUTER_API_KEY = "ak-your-key"
+```
 
 Verify:
 
 ```bash
 codex "Hello, are you connected to AIOrouter?"
-codex exec -m deepseek-v4-flash "2+2=?"
+codex exec -m deepseek-flash "2+2=?"
 ```
 
-Expected: normal reply; Codex startup output shows `provider: aiorouter` and your
-model.
+Expected: a normal reply, with `provider: aiorouter` in the startup output.
 
 ---
 
 ## Verify your setup (30 seconds)
 
-Paste these prompts in a chat to prove the PII Shield is active:
-
-1. [verify/name-placeholder-prompt.md](../verify/name-placeholder-prompt.md) — fake
-   identity "Jason Wang": the LLM must say it sees a placeholder, never your real name.
-2. [verify/api-key-redact-prompt.md](../verify/api-key-redact-prompt.md) — fake key:
-   the LLM must refuse to echo it.
+1. [verify/name-placeholder-prompt.md](../verify/name-placeholder-prompt.md) —
+   fake identity “Jason Wang”: the model must see a placeholder, not your name.
+2. [verify/api-key-redact-prompt.md](../verify/api-key-redact-prompt.md) —
+   a fake key must never reach the model; only the masked placeholder.
 
 ---
 
@@ -157,18 +137,27 @@ Paste these prompts in a chat to prove the PII Shield is active:
 
 | Symptom | Cause / Fix |
 |:---|:---|
-| App shows your ChatGPT name instead of "AIOrouter" | A background app overwrote `auth.json`. Fully quit (tray icon) → re-run the installer. |
-| `401` / `invalid_api_key` / `Key revoked` | The API key was rotated/revoked on the dashboard. Re-run the installer with the NEW key (it backs up, re-logins, and re-sets the User env var), then fully quit the app (tray icon) and relaunch — or run `codex login --with-api-key` directly. |
-| "Missing environment variable: AIOROUTER_API_KEY" | Your `config.toml` still has an old uncommented `env_key = "AIOROUTER_API_KEY"` line (older installer versions wrote it) and the app process did not inherit the env var (launched before it was set). Re-run the installer — since 2026-08-15 it auto-comments legacy `env_key` lines (auth.json-first) — then fully quit (tray icon) and relaunch. Manual fix: put `# ` in front of the `env_key` / `env_key_instructions` lines, then `codex login --with-api-key`. |
-| Error mentions `api.openai.com` | `base_url` is wrong — requests are going to OpenAI. Fix `base_url = "https://api.aiorouter.ca/v1"`. |
-| App menu switching broke `model` in config | The app's menu overwrote `model` with an OpenAI ID. Quit the app → restore `model = "deepseek-v4-flash"` → relaunch. Don't use the app menu; say "switch to X". |
-| `irm https://aiorouter.ca/setup/install-codex.ps1 | iex` fails with "The term 'Windows' is not recognized" | Older served copies started with a UTF-8 BOM that Windows PowerShell 5.1 mis-decodes, breaking the first comment line (fixed 2026-08-15 — server now serves a BOM-free copy with `charset=utf-8`). If you still see it, download the file, inspect it, and run `powershell -File install-codex.ps1` — identical result. |
+| App shows your ChatGPT name, not AIOrouter | A background app overwrote `auth.json`. Quit it fully (tray icon) and re-run the installer. |
+| `401` / `invalid_api_key` / `Key revoked` | Key rotated or revoked. Re-run the installer with the new key, then fully quit and relaunch the app. |
+| `Missing environment variable: AIOROUTER_API_KEY` | An old uncommented `env_key` line is still in `config.toml`. Re-run the installer (it comments legacy lines) or comment them manually, then `codex login --with-api-key`. |
+| Error mentions `api.openai.com` | `base_url` is wrong or the provider block is after a `[table]`. Fix both. |
+| App menu changed `model` to an OpenAI id | The app menu is OpenAI-only. Quit the app, restore `model = "deepseek-flash"`, and use “switch to X” instead. |
+| `irm ... \| iex` fails with “The term 'Windows' is not recognized” | An old BOM-prefixed copy. Re-download from the URL above; the current file is BOM-free and served as UTF-8. |
 
 ---
 
-## Deep-dive reference
+## Retired paths
 
-- [docs/mcp-integration.md](../docs/mcp-integration.md) — advanced MCP tools (10 tools)
-  for Claude Code / Codex CLI users (separate optional package)
-- Canonical 19-model list: [docs/model-catalog-link.md](../docs/model-catalog-link.md)
-- [docs/privacy-policy.md](../docs/privacy-policy.md) — data handling
+The `codex-aiorouter-mas` plugin and the `aiorouter-codex` CLI were retired on
+**2026-09-28**. Do not install them for a new setup — the Gateway route above
+replaces both. Historical commands remain documented at
+<https://aiorouter.ca/codex-integration> for reference only.
+
+---
+
+## Links
+
+- Live setup: <https://aiorouter.ca/codex-integration>
+- Full cookbook: <https://aiorouter.ca/docs/cookbook/codex-integration>
+- Model catalogue: <https://aiorouter.ca/docs/model-catalog>
+- Privacy policy: <https://aiorouter.ca/privacy-policy>

@@ -1,118 +1,167 @@
-# DeepSeek Harness (dsh) Setup — 19 AI models with one AIOrouter key
+# DeepSeek Harness (`dsh`) + AIOrouter Gateway
 
-> **Applies to:** DeepSeek Harness (`dsh`) the local profile-based AI coding harness
-> **Result:** one-line install → `dsh` runs on 19 AI models (DeepSeek, Qwen, GLM, Kimi,
-> Grok, Claude, Gemini) with one AIOrouter key — PII Shield and AI Firewall applied
-> before every route, model catalog auto-syncs from the gateway.
+> **Result:** one-line install → `dsh` runs on the AIOrouter Gateway with your own
+> API key. No plugin. No local proxy. Just a provider route in
+> `$DSH_HOME/settings.yaml` (default `~/.dsh/settings.yaml`).
 
----
+DeepSeek Harness reads providers from the `llm-pi-ai` block of its settings file.
+A provider that is not in dsh's built-in catalogue **must** declare `api` (the wire
+protocol) and at least one model, or dsh refuses to start the route with
+`NO_ADAPTER: no adapter registered for provider "aiorouter"`.
 
-## Before you start (Prerequisites)
-
-1. **Register + get an API key** at [dashboard.aiorouter.ca](https://dashboard.aiorouter.ca)
-   — new accounts get a free 7-day trial (`deepseek-v4-flash` only). AIOrouter is a
-   **paid service — no free tier** beyond the trial; keys are issued after activation.
-2. **Node.js >= 20** installed (`node --version`). `dsh` is installed via npm.
-3. Optional: **`dsh` Web UI** runs locally at `http://localhost:3080` (the profile used
-   by the Web UI is `web` — any profile name works the same).
+This repository ships the same installer the website serves:
+<https://aiorouter.ca/deepseek-harness-setup>
 
 ---
 
-## Option 0 — One-line install (fastest, recommended)
+## Requirements
 
-Run this in a terminal (PowerShell on Windows, Terminal on macOS/Linux):
+- **Node.js ≥ 22**
+- **DeepSeek Harness** (`dsh`) — the installer checks and offers
+  `npm install -g @deepseek-ai/dsh` if it is missing
+- An **AIOrouter API key** (`ak-...`) from <https://dashboard.aiorouter.ca/keys>
+  — new accounts get a one-time free trial; Top-Up credits unlock the rest of
+  the catalogue
 
-- **Windows (PowerShell):**
-  ```powershell
-  irm https://aiorouter.ca/setup/install-dsh.ps1 | iex
-  ```
-- **macOS / Linux (Terminal):**
-  ```bash
-  curl -fsSL https://aiorouter.ca/setup/install-dsh.sh | bash
-  ```
+---
+
+## One-line install (recommended)
+
+**Windows (PowerShell):**
+
+```powershell
+irm https://aiorouter.ca/setup/install-dsh.ps1 | iex
+```
+
+**macOS / Linux:**
+
+```bash
+curl -fsSL https://aiorouter.ca/setup/install-dsh.sh | bash
+```
 
 The installer:
-1. Checks Node.js >= 20 and installs `dsh` globally if missing (`npm i -g dsh`).
-2. Adds the **`@aiorouter/dsh-shield` plugin** to the profile
-   (`dsh plugin --profile <name> add @aiorouter/dsh-shield` — default profile `web`).
-3. Prompts for your AIOrouter API key with **masked input** and sets it as the
-   `AIOROUTER_API_KEY` environment variable (User scope on Windows / shell profile on
-   macOS/Linux). **The key is never echoed and never written in plaintext.**
 
-Scripts are also in this repo for review:
-[install-dsh.ps1](install-dsh.ps1) / [install-dsh.sh](install-dsh.sh).
+1. checks Node.js ≥ 22 and that `dsh` is on `PATH` (offers the npm install if not);
+2. writes the `aiorouter` provider block into `$DSH_HOME/settings.yaml`
+   (`DSH_HOME` defaults to `~/.dsh`), preserving your other settings;
+3. asks for the API key with masked input and stores it in the
+   `AIOROUTER_API_KEY` environment variable (never in `settings.yaml`);
+4. runs `--check-route` and tells you whether the route is registered.
 
----
-
-## Option 1 — Manual setup (3 steps)
-
-1. **Install the harness:**
-   ```bash
-   npm i -g dsh
-   ```
-2. **Add the plugin to the profile:**
-   ```bash
-   dsh plugin --profile web add @aiorouter/dsh-shield
-   ```
-   (The Web UI profile is `web`; use any other profile the same way.)
-3. **Set your key:** open the configuration — in the `dsh` Web UI go to
-   **Settings → Models** and set `AIOROUTER_API_KEY = ak-your-key`, or export it in
-   your shell profile:
-   ```bash
-   export AIOROUTER_API_KEY=ak-your-key
-   ```
+Re-running it is safe: the block is updated in place, not duplicated.
 
 ---
 
-## Changing models
+## Already have `dsh` installed?
 
-`dsh` profiles can switch models at any time (19 models, gateway-synced). The full
-model list with pricing: https://aiorouter.ca/docs/model-catalog
+Paste this prompt into a dsh session (it will ask for your key separately — never
+paste the key into the chat):
 
-The **`aiorouter_shield_status` tool** is available in any session: it shows your
-account card (balance, privacy policy, Shield state) and a per-session protection
-summary — metadata only, never your data.
+```text
+Configure AIOrouter in my dsh settings ($DSH_HOME/settings.yaml, default ~/.dsh/settings.yaml).
 
----
+Use exactly this provider block, preserving every other setting:
 
-## What the plugin adds
+llm-pi-ai:
+  providers:
+    aiorouter:
+      api: openai-completions
+      baseURL: https://api.aiorouter.ca/v1
+      apiKeyEnv: AIOROUTER_API_KEY
+      headers: {}
+      models:
+        - id: deepseek-flash
 
-| Feature | How it works |
-|:---|:---|
-| 🛡️ Privacy policy header (GW-2) | `restore-all` / `redact-secrets` (default) / `redact-all` — settable in Settings → AIOrouter Shield |
-| ♻️ Restoration markers (GW-1) | `plain` (default, clean values) / `markdown` — restored PII values never leak into transcripts |
-| 📊 `aiorouter_shield_status` | Account card + per-session protection summary — metadata only |
-| 🔄 Model-catalog auto-sync | New gateway models appear automatically (union-merge, every 6 h by default; 0 = at boot) |
-| 📦 Update check | Shows "📦 Update available: X → Y" + the `dsh plugin --profile web update @aiorouter/dsh-shield` command |
+Then:
+1. Download https://aiorouter.ca/setup/aiorouter-gateway-setup.mjs to a local file
+   (curl, Invoke-WebRequest, or your browser), then run:
+   node aiorouter-gateway-setup.mjs --no-sync
+2. Run: node aiorouter-gateway-setup.mjs --check-route
+3. If the route is OK, run the same command with --sync-models to add every model on my plan.
+4. Never ask me to paste my API key into this chat; tell me to set AIOROUTER_API_KEY in my shell instead.
+```
 
----
+If you prefer a terminal, the same three commands are:
 
-## Verify your setup (30 seconds)
-
-Start a session and paste:
-
-> `My name is Jason Wang. What is the second letter of my first name?`
-
-Expected: the LLM says it sees a placeholder and **cannot read your real name** —
-proof the PII Shield is active and your sensitive data never leaves the gateway
-unprotected.
-
----
-
-## Troubleshooting
-
-| Symptom | Cause / Fix |
-|:---|:---|
-| `dsh` command not found after install | Restart the terminal so the npm global bin is on `PATH` (Windows: new PowerShell window). |
-| `Plugin @aiorouter/dsh-shield not found` | The package may not be installed yet — run `dsh plugin --profile web add @aiorouter/dsh-shield` again. |
-| `401` / `invalid_api_key` / `Key revoked` | The API key was rotated/revoked on the dashboard. Set the new key in Settings → Models (or re-run the installer). |
-| "Missing environment variable: AIOROUTER_API_KEY" | The shell did not inherit the env var. Windows: sign out/in (User-scope vars) or set it in Settings → Models instead. macOS/Linux: re-source your shell profile. |
-| Error mentions `api.deepseek.com` | Requests are going to DeepSeek direct — the profile must point at AIOrouter (`https://api.aiorouter.ca/v1`). Switch the model/provider in Settings → Models. |
+```bash
+curl -fsSL https://aiorouter.ca/setup/aiorouter-gateway-setup.mjs -o aiorouter-gateway-setup.mjs
+node aiorouter-gateway-setup.mjs --no-sync
+node aiorouter-gateway-setup.mjs --check-route
+node aiorouter-gateway-setup.mjs --sync-models   # optional: pull the full catalogue
+```
 
 ---
 
-## Deep-dive reference
+## Manual setup (2 minutes)
 
-- Full setup + plugin details: [docs/cookbook/deepseek-harness-setup.md](../docs/cookbook/deepseek-harness-setup.md)
-- Canonical 19-model list: [docs/model-catalog-link.md](../docs/model-catalog-link.md)
-- [docs/privacy-policy.md](../docs/privacy-policy.md) — data handling
+Edit `$DSH_HOME/settings.yaml` (default `~/.dsh/settings.yaml`):
+
+```yaml
+llm-pi-ai:
+  providers:
+    aiorouter:
+      api: openai-completions
+      baseURL: https://api.aiorouter.ca/v1
+      apiKeyEnv: AIOROUTER_API_KEY
+      headers: {}
+      models:
+        - id: deepseek-flash
+```
+
+Then set the key in the environment dsh runs in:
+
+```powershell
+# Windows (current session; use System Properties → Environment Variables to persist)
+$env:AIOROUTER_API_KEY = "ak-your-key"
+```
+
+```bash
+# macOS / Linux (add to ~/.zshrc or ~/.bashrc to persist)
+export AIOROUTER_API_KEY="ak-your-key"
+```
+
+> The key is referenced by name (`apiKeyEnv`), never written into the YAML.
+
+Restart `dsh` and check that the provider appears in the model picker.
+
+---
+
+## Verify
+
+```bash
+node aiorouter-gateway-setup.mjs --check-route
+```
+
+Expected: `ROUTE OK` (the provider is registered and has at least one model).
+
+Then send a message in dsh. If you see:
+
+| Error | Meaning | Fix |
+|:---|:---|:---|
+| `NO_ADAPTER: no adapter registered for provider "aiorouter"` | the block is missing `api` and/or `models` | re-run the installer; the block above is the exact shape dsh 0.2.x expects |
+| `AUTH: ... invalid` | the route works, the key does not | check `AIOROUTER_API_KEY` and that the key is active on the dashboard |
+| provider missing from the picker | settings file not loaded | confirm `DSH_HOME` points at the directory containing `settings.yaml`, then restart dsh |
+
+---
+
+## Switching models
+
+The installer seeds one starter model (`deepseek-flash`). To add every model on
+your plan:
+
+```bash
+node aiorouter-gateway-setup.mjs --sync-models
+```
+
+This is additive and keeps a backup of `settings.yaml`. It never writes a key.
+
+Full catalogue: <https://aiorouter.ca/docs/model-catalog>
+
+---
+
+## Links
+
+- Live setup guide: <https://aiorouter.ca/deepseek-harness-setup>
+- Full cookbook: <https://aiorouter.ca/docs/cookbook/deepseek-harness-setup>
+- Model catalogue: <https://aiorouter.ca/docs/model-catalog>
+- Privacy policy: <https://aiorouter.ca/privacy-policy>

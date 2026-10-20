@@ -4,6 +4,29 @@ All notable changes to the AIOrouter Gateway setup repository are documented in 
 file. Format based on [Keep a Changelog](https://keepachangelog.com/), versioning
 follows [SemVer](https://semver.org/).
 
+## [1.3.0] — 2026-10-19
+
+### Changed
+
+- **DeepSeek Harness (`dsh`) — Gateway route, no plugin.** `deepseek-harness/SETUP.md`
+  rewritten for current dsh (0.2.x): the provider block now declares
+  `api: openai-completions` **and** a `models:` list — without both, dsh fails with
+  `NO_ADAPTER: no adapter registered for provider "aiorouter"`. Installers synced to
+  the live `public/setup` versions (Node ≥ 22, `DSH_HOME`, `--check-route`, masked
+  key via `AIOROUTER_API_KEY`). Added an “already installed? paste this prompt”
+  section.
+- **ChatGPT / Codex — current model ids and accurate catalog behaviour.**
+  `chatgpt-codex/SETUP.md` rewritten; installers synced to the live versions
+  (`deepseek-flash` default, current model names). The route does not rewrite
+  Codex's local catalog: the installer seeds a starter catalog and “switch to X”
+  refreshes it from `GET /v1/models`.
+- **Cookbooks** (`docs/cookbook/codex-integration.md`,
+  `docs/cookbook/deepseek-harness-setup.md`) synced with the website versions.
+- **Retired plugin/CLI** paths (`codex-aiorouter-mas`, `aiorouter-codex`, dsh MAS
+  plugin) are labelled historical (2026-09-28); no install path points at them.
+- Removed hardcoded catalogue counts (“19 models”) from README, guides and
+  installers; model lists link to the always-current catalogue.
+
 ## [1.2.0] — 2026-08-18
 
 ### Added
@@ -41,7 +64,7 @@ follows [SemVer](https://semver.org/).
 ### Added
 
 - **Initial public release** — the AIOrouter Gateway setup repository:
-  - `claude-desktop/SETUP.md` — main guide: Import config template → all 19 models in
+  - `claude-desktop/SETUP.md` — main guide: Import config template → every model on your plan in
     the picker; advanced "say switch to X" (bridge); known limitations disclosure
   - `chatgpt-codex/SETUP.md` — main guide: one-line install + SKILL-powered
     "say switch to X"; one-prompt path; manual fallback

@@ -86,28 +86,22 @@ MODEL_LIST_BLOCK=$(cat <<'MODELBLOCK_EOF'
 #      NOT use it to switch; say "switch to X" in the chat instead (SKILL).
 # Full guide: https://aiorouter.ca/codex-integration#setup
 # ────────────────────────────────────────────────────────────────────
-# MODEL — uncomment exactly ONE line (default = deepseek-v4-flash).
-# Full 19-model list: https://aiorouter.ca/docs/model-catalog
+# MODEL — uncomment exactly ONE line (default = deepseek-flash).
+# Full model list: https://aiorouter.ca/docs/model-catalog
 # (or run: node scripts/aiorouter-codex-bridge.mjs --list-models)
-  model = "deepseek-v4-flash"      # default
-  # model = "deepseek-v4-pro"
+  model = "deepseek-flash"      # default
   # model = "qwen3.8-max"
-  # model = "qwen3.7-max"
+  # model = "qwen3.8-flash"
   # model = "qwen3.7-plus"
-  # model = "qwen3.6-plus"
-  # model = "qwen3.6-flash"
   # model = "glm-5.2"
-  # model = "glm-5.1"
+  # model = "glm-5.3"
   # model = "kimi-k3"
-  # model = "kimi-k2.7-code"
-  # model = "kimi-k2.6"
-  # model = "grok-4.6"
-  # model = "claude-opus-5"
+  # model = "grok-4.7"
+  # model = "claude-opus-5-5"
   # model = "claude-sonnet-5"
-  # model = "claude-haiku-4.5"
-  # model = "claude-fable-5"
-  # model = "gemini-2.5-pro"
-  # model = "gemini-2.5-flash"
+  # model = "claude-haiku-5-5"
+  # model = "claude-fable-5-1"
+  # model = "gemini-3.8-flash"
 
 model_provider = "aiorouter"
 MODELBLOCK_EOF
@@ -118,7 +112,7 @@ if [ ! -f "${CONFIG_PATH}" ]; then
     echo "${MODEL_LIST_BLOCK}"
     echo "${AIOROUTER_BLOCK}"
   } > "${CONFIG_PATH}"
-  echo "✅ Created ~/.codex/config.toml (aiorouter provider, default: deepseek-v4-flash)"
+  echo "✅ Created ~/.codex/config.toml (aiorouter provider, default: deepseek-flash)"
 elif ! grep -q "model_providers\\.aiorouter" "${CONFIG_PATH}"; then
   echo "${AIOROUTER_BLOCK}" >> "${CONFIG_PATH}"
   echo "✅ Merged aiorouter provider into ~/.codex/config.toml"
@@ -206,7 +200,7 @@ echo '  Expected: the LLM says it sees a placeholder (e.g. "Jason Wang") and'
 echo '  cannot read my real name — that is proof the PII Shield is working.'
 echo '- If the reply shows the LLM read a real name, STOP and tell me the'
 echo '  shield is not active.'
-echo '- (CLI users only) In a fresh terminal: codex exec -m deepseek-v4-flash "2+2=?"'
+echo '- (CLI users only) In a fresh terminal: codex exec -m deepseek-flash "2+2=?"'
 echo '  → expect "4" and output showing provider: aiorouter.'
 echo '- Only say "setup complete" after the verification succeeds.'
 echo ''
@@ -219,8 +213,8 @@ echo 'Security secrets (passwords, API keys) default to Redact so the AI can'
 echo 'never write my real password into any file.'
 echo ''
 echo '【7】(Optional) A note about your plan:'
-echo '- If on the free trial (25,000 tokens / 7 days, deepseek-v4-flash only):'
-echo '  unlock all 19 models at dashboard.aiorouter.ca → Billing → Choose a'
+echo '- If on the free trial (25,000 tokens / 7 days, deepseek-flash only):'
+echo '  unlock all 14 models at dashboard.aiorouter.ca → Billing → Choose a'
 echo '  Top-Up pack (from $10 CAD).'
 echo '- Secure Stripe checkout (Visa/MC/Amex, CAD) — we never store your full card number.'
 echo '- Your key keeps working — no re-setup, and it works with many BYOK tools.'

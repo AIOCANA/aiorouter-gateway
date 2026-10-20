@@ -30,8 +30,8 @@ Please set up AIOrouter × Codex for me. Do the following in order:
 - If I don't have a key yet, guide me to register FREE at
   https://dashboard.aiorouter.ca (email + MFA) — my first key is issued
   immediately with a free trial (25,000 tokens / 7 days,
-  deepseek-v4-flash). No payment needed to start.
-- Trial covers deepseek-v4-flash only. Want to use all 19 models (DeepSeek,
+  deepseek-flash). No payment needed to start.
+- Trial covers deepseek-flash only. Want to use every model on your plan (DeepSeek,
   Qwen, GLM, Kimi, Grok, Claude, Gemini) at full quota? Add one-time
   Top-Up credits from the Dashboard — secure Stripe checkout (Visa/MC/Amex,
   CAD, we never store your full card number), packs from $10 CAD.
@@ -87,27 +87,21 @@ Please set up AIOrouter × Codex for me. Do the following in order:
   switch my default provider and ask before changing.
 - Back up the file first (config.toml.bak) if you edit it.
 - Template — write ALL of these lines:
-    # MODEL — uncomment exactly ONE line (default = deepseek-v4-flash).
-    # Full 19-model list: https://aiorouter.ca/docs/model-catalog
-    model = "deepseek-v4-flash"      # default
-    # model = "deepseek-v4-pro"
+    # MODEL — uncomment exactly ONE line (default = deepseek-flash).
+    # Full model list: https://aiorouter.ca/docs/model-catalog
+    model = "deepseek-flash"      # default
     # model = "qwen3.8-max"
-    # model = "qwen3.7-max"
+    # model = "qwen3.8-flash"
     # model = "qwen3.7-plus"
-    # model = "qwen3.6-plus"
-    # model = "qwen3.6-flash"
     # model = "glm-5.2"
-    # model = "glm-5.1"
+    # model = "glm-5.3"
     # model = "kimi-k3"
-    # model = "kimi-k2.7-code"
-    # model = "kimi-k2.6"
-    # model = "grok-4.5"
-    # model = "claude-opus-5"
+    # model = "grok-4.7"
+    # model = "claude-opus-5-5"
     # model = "claude-sonnet-5"
-    # model = "claude-haiku-4.5"
-    # model = "claude-fable-5"
-    # model = "gemini-2.5-pro"
-    # model = "gemini-2.5-flash"
+    # model = "claude-haiku-5-5"
+    # model = "claude-fable-5-1"
+    # model = "gemini-3.8-flash"
     model_provider = "aiorouter"
   [model_providers.aiorouter]
   name = "AIOrouter"
@@ -121,7 +115,7 @@ Please set up AIOrouter × Codex for me. Do the following in order:
   requests to OpenAI instead of AIOrouter.
 - After writing, RE-READ the file and verify EVERY item, then report PASS or
   FAIL for each:
-  [1] model = "deepseek-v4-flash" present (exactly one uncommented model line)
+  [1] model = "deepseek-flash" present (exactly one uncommented model line)
   [2] the commented model list (# model = ...) present
   [3] model_provider = "aiorouter" present at top level
   [4] [model_providers.aiorouter] section present
@@ -200,7 +194,7 @@ AGENTS.md). Please finish verifying and enable my setup:
   read my real name — that is proof the PII Shield is working.
 - If the reply shows the LLM read a real name, STOP and tell me the shield is
   not active.
-- (CLI users only) In a fresh terminal: codex exec -m deepseek-v4-flash "2+2=?"
+- (CLI users only) In a fresh terminal: codex exec -m deepseek-flash "2+2=?"
   → expect "4" and output showing provider: aiorouter.
 - If it fails with "Missing environment variable: AIOROUTER_API_KEY", the key
     was not picked up — re-run codex login --with-api-key; also comment out any
@@ -215,26 +209,29 @@ AGENTS.md). Please finish verifying and enable my setup:
 【6】Explain how AIOrouter protects me — a short, friendly technical summary:
 - Tell me (in plain language, 3-4 short sentences):
   1. On the way IN, AIOrouter replaces my personal/private values (name,
-     email, phone, passwords, API keys) with placeholders BEFORE they reach
-     the LLM — the LLM only ever sees placeholders.
+     email, phone) with placeholders BEFORE they reach the LLM — the LLM only
+     ever sees placeholders, never my real values.
   2. On the way BACK, AIOrouter restores the placeholders to my real values
-     (Restore) or keeps them redacted (Redact), exactly as I configured in
-     the Dashboard — that's why I see my correct name in the reply even
+     (Restore) or keeps them redacted (Redact) for personal data, per my
+     Dashboard settings — that's why I see my correct name in the reply even
      though the LLM said it saw a placeholder.
-  3. For security secrets (passwords, API keys) the default is Redact — so
-     they come back as [REDACTED ...] and the AI can never write my real
-     password into any file or reply.
+  3. For security secrets (passwords, API keys): they are masked into
+     placeholders BEFORE entering any model — model-side zero contact
+     (verified) — and the value I sent is restored back to me on the response
+     path. The LLM never sees my real secret; if my reply shows my own value,
+     it was returned to me, not disclosed by the model. (Response-surface
+     redaction of secrets is a planned policy option, not yet available.)
   4. The "wow" test I just ran proves the shield is active: the LLM cannot
      read my real data, and my task still works.
-- Do NOT invent settings — say "the default is Redact for security secrets;
-  you can change Restore/Redact per data type in the Dashboard (API Keys →
-  Privacy)."
+- Do NOT invent settings — if I ask, say: secrets are masked into placeholders
+  before entering any model (model-side zero contact), and the value I sent is
+  restored back to me on the response path.
 - End with: "You're fully set up. From now on, just say 'switch to X' and I'll
   change the model for you."
 
 【7】(Optional) A short note about my plan:
 - I'm currently on the free trial (25,000 tokens / 7 days,
-  deepseek-v4-flash only). To unlock all 19 models at full quota: open
+  deepseek-flash only). To unlock every model on your plan at full quota: open
   dashboard.aiorouter.ca → Billing → Add Top-Up credits (one-time packs
   from $10 CAD). Checkout is secured by Stripe (Visa/MC/Amex, CAD) — we never
   store my full card number. My key keeps working — no re-setup, and it works

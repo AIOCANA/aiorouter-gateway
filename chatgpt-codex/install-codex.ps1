@@ -108,28 +108,22 @@ $modelListBlock = @'
   #      NOT use it to switch; say "switch to X" in the chat instead (SKILL).
   # Full guide: https://aiorouter.ca/codex-integration
   # ────────────────────────────────────────────────────────────────────
-  # MODEL — uncomment exactly ONE line (default = deepseek-v4-flash).
-  # Full 19-model list: https://aiorouter.ca/docs/model-catalog
+  # MODEL — uncomment exactly ONE line (default = deepseek-flash).
+  # Full model list: https://aiorouter.ca/docs/model-catalog
   # (or run: node scripts/aiorouter-codex-bridge.mjs --list-models)
-    model = "deepseek-v4-flash"      # default
-    # model = "deepseek-v4-pro"
+    model = "deepseek-flash"      # default
     # model = "qwen3.8-max"
-    # model = "qwen3.7-max"
+    # model = "qwen3.8-flash"
     # model = "qwen3.7-plus"
-    # model = "qwen3.6-plus"
-    # model = "qwen3.6-flash"
     # model = "glm-5.2"
-    # model = "glm-5.1"
+    # model = "glm-5.3"
     # model = "kimi-k3"
-    # model = "kimi-k2.7-code"
-    # model = "kimi-k2.6"
-    # model = "grok-4.6"
-    # model = "claude-opus-5"
+    # model = "grok-4.7"
+    # model = "claude-opus-5-5"
     # model = "claude-sonnet-5"
-    # model = "claude-haiku-4.5"
-    # model = "claude-fable-5"
-    # model = "gemini-2.5-pro"
-    # model = "gemini-2.5-flash"
+    # model = "claude-haiku-5-5"
+    # model = "claude-fable-5-1"
+    # model = "gemini-3.8-flash"
   
 model_provider = "aiorouter"
 '@
@@ -139,7 +133,7 @@ model_provider = "aiorouter"
 # ("Error loading configuration: The system cannot find the file specified.
 #  (os error 2)") and `codex login` aborts. Codex also requires the catalog
 # to contain AT LEAST ONE model ("must contain at least one model"), so we
-# install a minimal catalog with the default model (deepseek-v4-flash);
+# install a minimal catalog with the default model (deepseek-flash);
 # the bridge refreshes it on the first model switch (§12.3 lazy refresh).
 # Also rebuild if it carries a UTF-8 BOM (older installer wrote one via
 # Set-Content; serde_json rejects it: "expected value at line 1 column 1").
@@ -154,11 +148,11 @@ if ((-not (Test-Path $catalogLocalPath)) -or $catalogHasBom) {
         # Preferred: download the minimal valid catalog (1 model). Downloaded
         # bytes have no BOM, so serde_json parses it fine.
         Invoke-WebRequest -Uri "https://aiorouter.ca/setup/aiorouter-catalog.min.json" -OutFile $catalogLocalPath -UseBasicParsing -ErrorAction Stop
-        Write-Host "Downloaded ~/.codex/aiorouter-catalog.json (1 model: deepseek-v4-flash - bridge refreshes on first switch)" -ForegroundColor Yellow
+        Write-Host "Downloaded ~/.codex/aiorouter-catalog.json (1 model: deepseek-flash - bridge refreshes on first switch)" -ForegroundColor Yellow
     }
     catch {
         # Fallback: embedded minimal catalog (same schema, BOM-less write).
-        $minimalCatalog = '{"schema_version":1,"generated_at":"' + (Get-Date).ToUniversalTime().ToString("o") + '","models":[{"id":"deepseek-v4-flash","name":"DeepSeek V4 Flash","context_length":1000000,"max_completion_tokens":384000}]}'
+        $minimalCatalog = '{"schema_version":1,"generated_at":"' + (Get-Date).ToUniversalTime().ToString("o") + '","models":[{"id":"deepseek-flash","name":"DeepSeek V4 Flash","context_length":1000000,"max_completion_tokens":384000}]}'
         [System.IO.File]::WriteAllText($catalogLocalPath, $minimalCatalog, (New-Object System.Text.UTF8Encoding($false)))
         Write-Host "Created embedded minimal ~/.codex/aiorouter-catalog.json (download unavailable)" -ForegroundColor Yellow
     }
@@ -172,7 +166,7 @@ model_catalog_json = "$($configDir.Replace('\','\\'))\\aiorouter-catalog.json"
 
 $aiorouterBlock
 "@ | Set-Content -Path $configPath -Encoding utf8
-    Write-Host "✅ Created ~/.codex/config.toml (aiorouter provider, default: deepseek-v4-flash)"
+    Write-Host "✅ Created ~/.codex/config.toml (aiorouter provider, default: deepseek-flash)"
 }
 else {
     $existing = Get-Content $configPath -Raw
@@ -313,7 +307,7 @@ Write-Host '  Expected: the LLM says it sees a placeholder (e.g. "Jason Wang") a
 Write-Host '  cannot read my real name — that is proof the PII Shield is working.' -ForegroundColor White
 Write-Host '- If the reply shows the LLM read a real name, STOP and tell me the' -ForegroundColor White
 Write-Host '  shield is not active.' -ForegroundColor White
-Write-Host '- (CLI users only) In a fresh terminal: codex exec -m deepseek-v4-flash "2+2=?"' -ForegroundColor White
+Write-Host '- (CLI users only) In a fresh terminal: codex exec -m deepseek-flash "2+2=?"' -ForegroundColor White
 Write-Host '  → expect "4" and output showing provider: aiorouter.' -ForegroundColor White
 Write-Host '- Only say "setup complete" after the verification succeeds.' -ForegroundColor White
 Write-Host '' -ForegroundColor White
@@ -326,8 +320,8 @@ Write-Host 'see my correct name even though the LLM said it saw a placeholder.' 
   Write-Host 'never write my real password into any file.' -ForegroundColor White
   Write-Host '' -ForegroundColor White
   Write-Host '【7】(Optional) A note about your plan:' -ForegroundColor White
-Write-Host '- If on the free trial (25,000 tokens / 7 days, deepseek-v4-flash only):' -ForegroundColor White
-    Write-Host '  unlock all 19 models at dashboard.aiorouter.ca → Billing → Choose a' -ForegroundColor White
+Write-Host '- If on the free trial (25,000 tokens / 7 days, deepseek-flash only):' -ForegroundColor White
+    Write-Host '  unlock all 14 models at dashboard.aiorouter.ca → Billing → Choose a' -ForegroundColor White
     Write-Host '  Top-Up pack (from $10 CAD).' -ForegroundColor White
   Write-Host '- Secure Stripe checkout (Visa/MC/Amex, CAD) — we never store your full card number.' -ForegroundColor White
   Write-Host '- Your key keeps working — no re-setup, and it works with many BYOK tools.' -ForegroundColor White
